@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        displaySelectectedScreen(R.id.nav_add_report);
+        displaySelectectedScreen(R.id.nav_map);
 
         setupLocationProvider();
     }

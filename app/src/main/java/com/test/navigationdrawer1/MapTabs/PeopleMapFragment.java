@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.test.navigationdrawer1.R;
 
@@ -58,17 +60,39 @@ public class PeopleMapFragment extends Fragment {
                 googleMap = mMap;
 
                 // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
+                LatLng sydney = new LatLng(19.4978, -99.1269);
+                LatLng sydney1 = new LatLng(19.50, -99.1269);
+                LatLng sydney2 = new LatLng(19.48, -99.1269);
+                LatLng sydney3 = new LatLng(19.4978, -99.13);
+                LatLng sydney4 = new LatLng(19.4978, -99.11);
                 googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                googleMap.addMarker(new MarkerOptions().position(sydney1).title("Marker Title").snippet("Marker Description"));
+                googleMap.addMarker(new MarkerOptions().position(sydney2).title("Marker Title").snippet("Marker Description"));
+                googleMap.addMarker(new MarkerOptions().position(sydney3).title("Marker Title").snippet("Marker Description"));
+                googleMap.addMarker(new MarkerOptions().position(sydney4).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(13).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setOnMarkerClickListener(markerClickListener);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             }
         });
 
         return rootView;
     }
+
+    GoogleMap.OnMarkerClickListener markerClickListener = new GoogleMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            Toast.makeText(getActivity(), marker.getPosition().latitude + "/" + marker.getPosition().longitude, Toast.LENGTH_LONG).show();
+
+            // true if the listener has consumed the event (i.e., the default behavior should
+            // not occur); false otherwise (i.e., the default behavior should occur). The default
+            // behavior is for the camera to move to the marker and an info window to appear.
+            return false;
+        }
+    };
 
     @Override
     public void onAttach(Context context) {

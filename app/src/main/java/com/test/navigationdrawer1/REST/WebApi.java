@@ -13,7 +13,7 @@ import org.json.JSONObject;
  */
 
 public class WebApi {
-    private final String BaseUrl = "http://192.168.1.75:3000/";//"https://floating-sands-67659.herokuapp.com/";
+    private final String BaseUrl = "https://floating-sands-67659.herokuapp.com/";//"http://192.168.1.75:3000/";
     private final Activity parent;
 
     public IHttpResponseMethods responseMethods;
