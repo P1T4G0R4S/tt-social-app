@@ -3,5 +3,5 @@
     <!--Base color: #B4B400-->
     <color name="colorPrimary">#E1E000</color>
     <color name="colorPrimaryDark">#898800</color>
-    <color name="colorAccent">#23009B</color>
+    <color name="colorAccent">#000000</color>
 </resources>

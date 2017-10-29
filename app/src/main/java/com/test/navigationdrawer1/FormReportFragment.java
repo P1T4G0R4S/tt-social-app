@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +27,9 @@ import com.test.navigationdrawer1.REST.IHttpResponseMethods;
 import com.test.navigationdrawer1.REST.Models.CatEdoReporte;
 import com.test.navigationdrawer1.REST.Models.ReporteIncidente;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -177,16 +181,48 @@ public class FormReportFragment extends Fragment {
     {
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             Log.d("PICK_IMAGE", "" + data + "/");
-            image_report_imageview.setImageURI(data.getData());
+            Uri imageUri = data.getData();
+            image_report_imageview.setImageURI(imageUri);
 
-            /*final Bundle extras = data.getExtras();
-            if (extras != null) {
+            Log.e("IMAGE", "" + imageUri);
+            if (imageUri != null) {
                 //Get image
-                Bitmap newProfilePic = extras.getParcelable("data");
-            }*/
+                try {
+                    Bitmap reportPic = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
+
+                    String imageString = getImageBase64String(reportPic);
+
+                    activity.api.responseMethods = uploadImage;
+                    activity.api.UploadImageReporteIncidente(imageString);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
+    IHttpResponseMethods uploadImage = new IHttpResponseMethods() {
+        @Override
+        public void response(String jsonResponse) {
+            Toast.makeText(activity.getApplicationContext(), jsonResponse,
+                    Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void error(String error) {
+            Toast.makeText(activity.getApplicationContext(), error,
+                    Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private String getImageBase64String(Bitmap bitmap){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        final String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return imageString;
+    }
 
     @Override
     public void onAttach(Context context) {

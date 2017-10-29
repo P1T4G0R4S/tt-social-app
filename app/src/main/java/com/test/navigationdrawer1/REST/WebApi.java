@@ -13,7 +13,7 @@ import org.json.JSONObject;
  */
 
 public class WebApi {
-    private final String BaseUrl = "https://floating-sands-67659.herokuapp.com/";//"http://192.168.0.7:3000/";
+    private final String BaseUrl = "http://192.168.1.75:3000/";//"https://floating-sands-67659.herokuapp.com/";
     private final Activity parent;
 
     public IHttpResponseMethods responseMethods;
@@ -62,6 +62,19 @@ public class WebApi {
             //if (reporteIncidente.idSismoRegistradoRI != 0) {
                 postDataParams.put("id_sismo_registrado_ri", reporteIncidente.idSismoRegistradoRI);
             //}
+
+            new HttpPostRequest(parent).execute(url, responseMethods, postDataParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void UploadImageReporteIncidente(String imagenReporte) {
+        String url = BaseUrl + "api/usuarios/uploadImage";
+
+        JSONObject postDataParams = new JSONObject();
+        try {
+            postDataParams.put("image", imagenReporte);
 
             new HttpPostRequest(parent).execute(url, responseMethods, postDataParams);
         } catch (Exception e) {

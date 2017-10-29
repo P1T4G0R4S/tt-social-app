@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        displaySelectectedScreen(R.id.nav_search);
+        displaySelectectedScreen(R.id.nav_add_report);
 
         setupLocationProvider();
     }
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new MapFragment();
             getSupportActionBar().setTitle(getString(R.string.map_fragment_title));
 
-            fab.setImageResource(R.drawable.ic_map);
+            fab.setImageResource(R.drawable.ic_my_location);
         } else if (itemId == R.id.nav_status) {
             fragment = new StatusFragment();
             getSupportActionBar().setTitle(getString(R.string.status_fragment_title));
