@@ -2,6 +2,8 @@ package com.test.navigationdrawer1;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.test.navigationdrawer1.REST.WebApi;
 
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        displaySelectectedScreen(R.id.nav_map);
+        displaySelectectedScreen(R.id.nav_search);
 
         setupLocationProvider();
     }
@@ -56,6 +60,19 @@ public class MainActivity extends AppCompatActivity
     public void setupLocationProvider() {
         // Acquire a reference to the system Location Manager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            new AlertDialog.Builder(this)
+                .setTitle("Acceder a mi ubucación")
+                .setMessage("Para permitir un funcionamiento completo de la aplicación, es necesario activar el servicio de ubicación.")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Intent intent= new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+        }
 
         // Define a listener that responds to location updates
         LocationListener locationListener = new LocationListener() {
@@ -87,7 +104,7 @@ public class MainActivity extends AppCompatActivity
             Log.e("GPS", "SÍ SE REQUIRIERON PERMISOS");
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5*1000, 0, locationListener);
         Log.e("GPS", "NO SE REQUIRIERON PERMISOS");
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
