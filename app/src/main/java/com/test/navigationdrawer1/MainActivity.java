@@ -1,19 +1,25 @@
 package com.test.navigationdrawer1;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -25,14 +31,33 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.test.navigationdrawer1.Adapters.ServiceListViewAdapter;
+import com.test.navigationdrawer1.Network.DeviceType;
 import com.test.navigationdrawer1.REST.WebApi;
+import com.test.navigationdrawer1.Utils.NetworkUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import edu.rit.se.wifibuddy.DnsSdService;
+import edu.rit.se.wifibuddy.WifiDirectHandler;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public WebApi api;
     public Location location;
+    WifiDirectHandler wifiDirectHandler;
+    String TAG = "Main";
+    Context context;
+    NetworkUtil networkUtil;
+    ListView deviceList;
+    ServiceListViewAdapter servicesListAdapter;
+    List<DnsSdService> services = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        context = this;
 
         api = new WebApi(this);
 
@@ -53,8 +79,44 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         displaySelectectedScreen(R.id.nav_search);
+        networkUtil = NetworkUtil.getInstance(DeviceType.EMITTER);
 
         setupLocationProvider();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setServiceList();
+        //initEnableExternalStorage();
+        registerCommunicationReceiver();
+        addWifiService();
+
+        //showDeviceInformation();
+
+        //prepareResetButton();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        removeWifiP2pService();
+        removeWifiService();
+        finish();
+    }
+
+    private void removeWifiService() {
+        Log.w(TAG, "Service Wifi removed");
+        wifiDirectHandler.removeGroup();
+        context.stopService(new Intent(context, ServiceConnection.class));
+        context.unbindService(wifiServiceConnection);
+    }
+
+    private void removeWifiP2pService() {
+        Log.w(TAG, "Service P2p removed");
+        wifiDirectHandler.removeService();
     }
 
     public void setupLocationProvider() {
@@ -195,5 +257,150 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void registerCommunicationReceiver() {
+        CommunicationReceiver communicationReceiver = new CommunicationReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiDirectHandler.Action.DNS_SD_SERVICE_AVAILABLE);
+        filter.addAction(WifiDirectHandler.Action.WIFI_STATE_CHANGED);
+        filter.addAction(WifiDirectHandler.Action.SERVICE_CONNECTED);
+        filter.addAction(WifiDirectHandler.Action.MESSAGE_RECEIVED);
+        filter.addAction(WifiDirectHandler.Action.DEVICE_CHANGED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(communicationReceiver, filter);
+        Log.i(TAG, "Communication Receiver registered");
+    }
+
+    private void addWifiService() {
+        Log.w(TAG, "Service Wifi added");
+        Intent intent = new Intent(context, WifiDirectHandler.class);
+        bindService(intent, wifiServiceConnection, BIND_AUTO_CREATE);
+        startService(intent);
+    }
+
+    private void addWifiP2pService() {
+        //pref = this.getSharedPreferences("Options", MODE_PRIVATE);
+        //int deviceTypePref = pref.getInt("devicetype",999);
+        //DeviceType deviceType = DeviceType.get(deviceTypePref);
+
+        if (wifiDirectHandler.getWifiP2pServiceInfo() == null) {
+            HashMap<String, String> record = new HashMap<>();
+            record.put("Name", wifiDirectHandler.getThisDevice().deviceName);
+            record.put("Address", wifiDirectHandler.getThisDevice().deviceAddress);
+            //record.put("DeviceType", deviceType.toString());
+            record.put("DeviceType", "TEST");
+            wifiDirectHandler.addLocalService("Wi-Fi Buddy", record);
+            Log.d(TAG, "Service P2p added");
+        } else {
+            Log.w(TAG, "Service P2p already added");
+        }
+    }
+
+    private void setServiceList() {
+        deviceList = (ListView)findViewById(R.id.device_list);
+        servicesListAdapter = new ServiceListViewAdapter(this, services);
+        deviceList.setAdapter(servicesListAdapter);
+        services.clear();
+        servicesListAdapter.notifyDataSetChanged();
+    }
+
+    public class CommunicationReceiver extends BroadcastReceiver {
+
+        private static final String TAG = WifiDirectHandler.TAG + "CSearchReceiver";
+        //private MainActivity activity;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //activity = (MainActivity) context;
+            // Get the intent sent by WifiDirectHandler when a service is found
+            if (intent.getAction().equals(WifiDirectHandler.Action.DEVICE_CHANGED)) {
+                // This device's information has changed
+                Log.i(TAG, "This device changed");
+                Log.d(TAG, wifiDirectHandler.getThisDeviceAddress());
+                if (wifiDirectHandler.getThisDevice() != null) {
+                    addWifiP2pService();
+                    //prepareResetButton();
+                    //showDeviceInformation();
+                    wifiDirectHandler.continuouslyDiscoverServices();
+                }
+
+            } else if (intent.getAction().equals(WifiDirectHandler.Action.WIFI_STATE_CHANGED)) {
+                // Wi-Fi has been enabled or disabled
+                Log.i(TAG, "Wi-Fi state changed");
+            } else if (intent.getAction().equals(WifiDirectHandler.Action.SERVICE_CONNECTED)) {
+                // This device has connected to another device broadcasting the same service
+                Log.i(TAG, "Service connected onReceive()");
+                //pref = context.getSharedPreferences("Options", MODE_PRIVATE);
+                //int deviceTypePref = pref.getInt("devicetype",999);
+                //DeviceType deviceType = DeviceType.get(deviceTypePref);
+                //processConnectionIn(deviceType);
+
+            } else if (intent.getAction().equals(WifiDirectHandler.Action.MESSAGE_RECEIVED)) {
+                // A message from the Communication Manager has been received
+                Log.i(TAG, "Message received");
+                //new ReceiveMessageTask().execute(intent.getByteArrayExtra(WifiDirectHandler.MESSAGE_KEY));
+
+            } else if (intent.getAction().equals(WifiDirectHandler.Action.DNS_SD_SERVICE_AVAILABLE)) {
+                Log.d(TAG, "Service Discovered and Accessed " + (new Date()).getTime());
+                String serviceKey = intent.getStringExtra(WifiDirectHandler.SERVICE_MAP_KEY);
+                DnsSdService service = wifiDirectHandler.getDnsSdServiceMap().get(serviceKey);
+
+                if (service.getSrcDevice() == null) {
+                    Log.w(TAG, "Unaccesible source device.");
+                    return;
+                }
+
+                if (service.getSrcDevice().deviceName.equals("")) {
+                    Log.w(TAG, "Unaccesible source device name.");
+                    return;
+                }
+
+                if (servicesListAdapter.addUnique(service)) {
+                    if (networkUtil.canConnectTo(service)) {
+                        //onServiceClick(service);
+                    }
+                }
+
+                Log.d(TAG + "TEST", "ServicesList count: " + servicesListAdapter.getCount());
+            }
+        }
+    }
+
+    private ServiceConnection wifiServiceConnection = new ServiceConnection() {
+
+        /**
+         * Called when a connection to the Service has been established, with the IBinder of the
+         * communication channel to the Service.
+         * @param name The component name of the service that has been connected
+         * @param service The IBinder of the Service's communication channel
+         */
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "Binding WifiDirectHandler service");
+            Log.i(TAG, "ComponentName: " + name);
+            Log.i(TAG, "Service: " + service);
+            WifiDirectHandler.WifiTesterBinder binder = (WifiDirectHandler.WifiTesterBinder) service;
+
+            wifiDirectHandler = binder.getService();
+            Log.i(TAG, "WifiDirectHandler service bound");
+
+            //showDeviceInformation();
+        }
+
+        /**
+         * Called when a connection to the Service has been lost.  This typically
+         * happens when the process hosting the service has crashed or been killed.
+         * This does not remove the ServiceConnection itself -- this
+         * binding to the service will remain active, and you will receive a call
+         * to onServiceConnected when the Service is next running.
+         */
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "WifiDirectHandler service unbound");
+        }
+    };
+
+    public WifiDirectHandler getWifiHandler() {
+        return wifiDirectHandler;
     }
 }
