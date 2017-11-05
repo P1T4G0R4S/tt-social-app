@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity
 
         removeWifiP2pService();
         removeWifiService();
-        finish();
     }
 
     private void removeWifiService() {
