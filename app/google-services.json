@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "569049920131",
+    "firebase_url": "https://ttapp-1509071108764.firebaseio.com",
+    "project_id": "ttapp-1509071108764",
+    "storage_bucket": "ttapp-1509071108764.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569049920131:android:8e1d1358fc55b703",
+        "android_client_info": {
+          "package_name": "com.test.navigationdrawer1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "569049920131-ha8oq572f412gu06ij4inf683a5pl2ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeJcGnS2RQgFw3_36hmJLu8EbkoNcej_g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569049920131:android:ca39ec2c0212298c",
+        "android_client_info": {
+          "package_name": "com.ipn.tt.homescreen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "569049920131-ha8oq572f412gu06ij4inf683a5pl2ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeJcGnS2RQgFw3_36hmJLu8EbkoNcej_g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
