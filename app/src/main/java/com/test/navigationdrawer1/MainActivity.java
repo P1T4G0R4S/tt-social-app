@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     String TAG = "Main";
     Context context;
     NetworkUtil networkUtil;
+    SharedPreferences pref;
     ListView deviceList;
     ServiceListViewAdapter servicesListAdapter;
     List<DnsSdService> services = new ArrayList<>();
@@ -108,15 +110,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void removeWifiService() {
-        Log.w(TAG, "Service Wifi removed");
-        wifiDirectHandler.removeGroup();
-        context.stopService(new Intent(context, ServiceConnection.class));
-        context.unbindService(wifiServiceConnection);
+        if (wifiDirectHandler != null) {
+            Log.w(TAG, "Service Wifi removed");
+            wifiDirectHandler.removeGroup();
+            context.stopService(new Intent(context, ServiceConnection.class));
+            context.unbindService(wifiServiceConnection);
+        }
     }
 
     private void removeWifiP2pService() {
-        Log.w(TAG, "Service P2p removed");
-        wifiDirectHandler.removeService();
+        if (wifiDirectHandler != null) {
+            Log.w(TAG, "Service P2p removed");
+            wifiDirectHandler.removeService();
+        }
     }
 
     public void setupLocationProvider() {
@@ -279,16 +285,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addWifiP2pService() {
-        //pref = this.getSharedPreferences("Options", MODE_PRIVATE);
-        //int deviceTypePref = pref.getInt("devicetype",999);
-        //DeviceType deviceType = DeviceType.get(deviceTypePref);
+        pref = this.getSharedPreferences("Options", MODE_PRIVATE);
+        int deviceTypePref = pref.getInt("devicetype", DeviceType.EMITTER.getCode());
+        DeviceType deviceType = DeviceType.get(deviceTypePref);
+        Log.e("addWifiP2pService", deviceType.toString());
 
         if (wifiDirectHandler.getWifiP2pServiceInfo() == null) {
             HashMap<String, String> record = new HashMap<>();
             record.put("Name", wifiDirectHandler.getThisDevice().deviceName);
             record.put("Address", wifiDirectHandler.getThisDevice().deviceAddress);
-            //record.put("DeviceType", deviceType.toString());
-            record.put("DeviceType", "TEST");
+            record.put("DeviceType", deviceType.toString());
+            //record.put("DeviceType", "TEST");
             wifiDirectHandler.addLocalService("Wi-Fi Buddy", record);
             Log.d(TAG, "Service P2p added");
         } else {
