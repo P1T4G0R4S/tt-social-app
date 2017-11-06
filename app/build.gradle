@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "66989d032c1543a5b8a62bcaee74cafb"]
     }
     buildTypes {
         release {
@@ -33,6 +34,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.0.4'
     compile project(path: ':wifibuddy')
 
+    compile 'net.hockeyapp.android:HockeySDK:5.0.2'
     testCompile 'junit:junit:4.12'
 }
 

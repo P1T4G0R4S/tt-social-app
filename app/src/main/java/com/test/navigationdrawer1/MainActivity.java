@@ -40,6 +40,9 @@ import com.test.navigationdrawer1.Network.DeviceType;
 import com.test.navigationdrawer1.REST.WebApi;
 import com.test.navigationdrawer1.Utils.NetworkUtil;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity
         networkUtil = NetworkUtil.getInstance(DeviceType.EMITTER);
 
         setupLocationProvider();
+        checkForUpdates();
     }
 
     @Override
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity
         //showDeviceInformation();
 
         //prepareResetButton();
+        checkForCrashes();
     }
 
     @Override
@@ -106,7 +111,29 @@ public class MainActivity extends AppCompatActivity
 
         removeWifiP2pService();
         removeWifiService();
+
+        unregisterManagers();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterManagers();
+    }
+
+    private void checkForCrashes() {
+        CrashManager.register(this);
+    }
+
+    private void checkForUpdates() {
+        // Remove this for store builds!
+        UpdateManager.register(this);
+    }
+
+    private void unregisterManagers() {
+        UpdateManager.unregister();
+    }
+
 
     private void removeWifiService() {
         if (wifiDirectHandler != null) {
