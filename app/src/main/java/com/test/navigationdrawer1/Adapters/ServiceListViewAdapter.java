@@ -116,7 +116,7 @@ public class ServiceListViewAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //context.onServiceClick(service);
+                context.onServiceClick(service);
             }
         });
 

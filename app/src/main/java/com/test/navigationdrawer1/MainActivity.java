@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
@@ -122,12 +123,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkForCrashes() {
-        CrashManager.register(this);
+        //CrashManager.register(this);
     }
 
     private void checkForUpdates() {
         // Remove this for store builds!
-        UpdateManager.register(this);
+        //UpdateManager.register(this);
     }
 
     private void unregisterManagers() {
@@ -257,6 +258,13 @@ public class MainActivity extends AppCompatActivity
         if (itemId == R.id.nav_search) {
             fragment = new SearchFragment();
             getSupportActionBar().setTitle(getString(R.string.search_fragment_title));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    resetServiceDiscovery();
+                    Toast.makeText(getApplicationContext(), "Reset", Toast.LENGTH_LONG).show();
+                }
+            });
 
             fab.setImageResource(R.drawable.ic_search);
         } else if (itemId == R.id.nav_map) {
@@ -390,7 +398,7 @@ public class MainActivity extends AppCompatActivity
 
                 if (servicesListAdapter.addUnique(service)) {
                     if (networkUtil.canConnectTo(service)) {
-                        //onServiceClick(service);
+                        onServiceClick(service);
                     }
                 }
 
@@ -435,5 +443,45 @@ public class MainActivity extends AppCompatActivity
 
     public WifiDirectHandler getWifiHandler() {
         return wifiDirectHandler;
+    }
+
+    public void onServiceClick(DnsSdService service) {
+        Log.i(TAG, "\nService List item tapped");
+
+        if (service.getSrcDevice().status == WifiP2pDevice.CONNECTED) {
+            /*if (chatFragment == null) {
+                chatFragment = new ChatFragment();
+            }
+            replaceFragment(chatFragment);*/
+            Log.i(TAG, "Switching to Chat fragment");
+        } else if (service.getSrcDevice().status == WifiP2pDevice.AVAILABLE) {
+            String sourceDeviceName = service.getSrcDevice().deviceName;
+            if (sourceDeviceName.equals("")) {
+                sourceDeviceName = "other device";
+            }
+            Toast.makeText(this, "Inviting " + sourceDeviceName + " to connect", Toast.LENGTH_LONG).show();
+            wifiDirectHandler.initiateConnectToService(service);
+        } else {
+            Log.e(TAG, "Service not available");
+            Toast.makeText(this, "Service not available", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void resetServiceDiscovery(){
+
+        removeWifiP2pService();
+        removeWifiService();
+
+        setServiceList();
+        //initEnableExternalStorage();
+        ////registerCommunicationReceiver();
+        addWifiService();
+
+
+        // Clear the list, notify the list adapter, and start discovering services again
+        Log.i(TAG, "Resetting Service discovery");
+        services.clear();
+        servicesListAdapter.notifyDataSetChanged();
+        wifiDirectHandler.resetServiceDiscovery();
     }
 }
