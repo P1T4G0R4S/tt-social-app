@@ -14,10 +14,10 @@
             android:id="@+id/nav_status"
             android:icon="@drawable/ic_favorite"
             android:title="Reportar mi estado" />
-        <item
+        <!--<item
             android:id="@+id/nav_add_report"
             android:icon="@drawable/ic_pin_drop"
-            android:title="Reportar incidente" />
+            android:title="Reportar incidente" />-->
     </group>
 
     <!--<item android:title="Communicate">

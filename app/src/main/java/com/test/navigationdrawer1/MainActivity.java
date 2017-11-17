@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity
 
     public void displaySelectectedScreen(int itemId) {
         Fragment fragment = null;
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         if (itemId == R.id.nav_search) {
             fragment = new SearchFragment();
@@ -270,6 +270,22 @@ public class MainActivity extends AppCompatActivity
         } else if (itemId == R.id.nav_map) {
             fragment = new MapFragment();
             getSupportActionBar().setTitle(getString(R.string.map_fragment_title));
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "New fragment", Toast.LENGTH_LONG).show();
+                    Fragment fragment1 = new FormReportFragment();
+
+                    if (fragment1 != null) {
+
+                        fab.setImageResource(R.drawable.ic_pin_drop);
+
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment1);
+                        ft.commit();
+                    }
+                }
+            });
 
             fab.setImageResource(R.drawable.ic_my_location);
         } else if (itemId == R.id.nav_status) {
@@ -277,12 +293,12 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(getString(R.string.status_fragment_title));
 
             fab.setImageResource(R.drawable.ic_favorite);
-        } else if (itemId == R.id.nav_add_report) {
+        } /*else if (itemId == R.id.nav_add_report) {
             fragment = new FormReportFragment();
             getSupportActionBar().setTitle(getString(R.string.report_fragment_title));
 
             fab.setImageResource(R.drawable.ic_pin_drop);
-        } else if (itemId == R.id.action_settings) {
+        }*/ else if (itemId == R.id.action_settings) {
             fragment = new RoleFragment();
             getSupportActionBar().setTitle(getString(R.string.role_fragment_title));
 
