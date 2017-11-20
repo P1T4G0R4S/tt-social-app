@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
@@ -36,13 +37,20 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.test.navigationdrawer1.Adapters.ServiceListViewAdapter;
 import com.test.navigationdrawer1.Network.DeviceType;
+import com.test.navigationdrawer1.Network.Message;
+import com.test.navigationdrawer1.Network.MessageContent;
+import com.test.navigationdrawer1.Network.ObjectType;
 import com.test.navigationdrawer1.REST.WebApi;
+import com.test.navigationdrawer1.Tasks.SendMessageTask;
 import com.test.navigationdrawer1.Utils.NetworkUtil;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
+
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity
     ListView deviceList;
     ServiceListViewAdapter servicesListAdapter;
     List<DnsSdService> services = new ArrayList<>();
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -387,15 +396,15 @@ public class MainActivity extends AppCompatActivity
             } else if (intent.getAction().equals(WifiDirectHandler.Action.SERVICE_CONNECTED)) {
                 // This device has connected to another device broadcasting the same service
                 Log.i(TAG, "Service connected onReceive()");
-                //pref = context.getSharedPreferences("Options", MODE_PRIVATE);
-                //int deviceTypePref = pref.getInt("devicetype",999);
-                //DeviceType deviceType = DeviceType.get(deviceTypePref);
-                //processConnectionIn(deviceType);
+                pref = context.getSharedPreferences("Options", MODE_PRIVATE);
+                int deviceTypePref = pref.getInt("devicetype",999);
+                DeviceType deviceType = DeviceType.get(deviceTypePref);
+                processConnectionIn(deviceType);
 
             } else if (intent.getAction().equals(WifiDirectHandler.Action.MESSAGE_RECEIVED)) {
                 // A message from the Communication Manager has been received
                 Log.i(TAG, "Message received");
-                //new ReceiveMessageTask().execute(intent.getByteArrayExtra(WifiDirectHandler.MESSAGE_KEY));
+                new ReceiveMessageTask().execute(intent.getByteArrayExtra(WifiDirectHandler.MESSAGE_KEY));
 
             } else if (intent.getAction().equals(WifiDirectHandler.Action.DNS_SD_SERVICE_AVAILABLE)) {
                 Log.d(TAG, "Service Discovered and Accessed " + (new Date()).getTime());
@@ -499,5 +508,90 @@ public class MainActivity extends AppCompatActivity
         services.clear();
         servicesListAdapter.notifyDataSetChanged();
         wifiDirectHandler.resetServiceDiscovery();
+    }
+
+    private void processConnectionIn(DeviceType myType) {
+        Log.d(TAG, "processConnectionIn(); " + myType.toString());
+        String msg;
+        switch (myType) {
+            case ACCESS_POINT:
+                Log.i(TAG, "ACCESS_POINT");
+                Log.d(TAG, "Waiting for incoming messages.");
+                break;
+            case ACCESS_POINT_WREQ:
+                Log.i(TAG, "ACCESS_POINT_WREQ");
+                Log.d(TAG, "Waiting for incoming messages.");
+                break;
+            case ACCESS_POINT_WRES:
+                Log.i(TAG, "ACCESS_POINT_WRES");
+                Log.d(TAG, "Waiting for incoming messages.");
+                break;
+            case RANGE_EXTENDER:
+                Log.i(TAG, "RANGE_EXTENDER");
+                //msg = "{'Label': 'RANGE_EXTENDER -> DISCOVERY'}";
+                msg = gson.toJson(new MessageContent("RANGE_EXTENDER -> DISCOVERY", "", ""));
+                new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.DISCOVERY);
+                break;
+            case EMITTER:
+                Log.i(TAG, "EMITTER");
+                //msg = "{'Label': 'EMITTER -> HELLO', 'Mac':'11:22:33:44:55:66', 'UserName': 'Test'}";
+                msg = gson.toJson(new MessageContent("EMITTER -> HELLO", "11:22:33:44:55:66", "Test"));
+                new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.HELLO);
+                break;
+            case QUERIER:
+                Log.i(TAG, "QUERIER");
+                //msg = "{'Label': 'QUERIER -> REQUEST', 'Mac':'11:22:33:44:55:66'}";
+                msg = gson.toJson(new MessageContent("QUERIER -> REQUEST", "11:22:33:44:55:66", ""));
+                new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.REQUEST);
+                break;
+            default:
+                //new SendMessageTask().execute(activity, json.toJson(activity.curDevice), ObjectType.HELLO);
+                break;
+        }
+    }
+
+    private class ReceiveMessageTask extends AsyncTask<byte[], Void, Message> {
+        protected Message doInBackground(byte[]... objects) {
+            byte[] readMessage = objects[0];
+            Message message = SerializationUtils.deserialize(readMessage);
+            switch(message.messageType) {
+                case TEXT:
+                    Log.i(TAG, "Text message received");
+                    //return new String(message.message);
+                    return message;
+            }
+            Log.d(TAG,"ReceiveMessageTask");
+            return null;
+        }
+
+        protected void onProgressUpdate(Void... progress) {
+        }
+
+        protected void onPostExecute(Message result) {
+            processReceivedMessage(result);
+        }
+    }
+
+    private void processReceivedMessage(Message msg) {
+        String s = new String(msg.message);
+
+        if (s.equals("")) return;
+        Log.d(TAG, "Received: " + s);
+
+        Toast.makeText(getApplicationContext(), "Recibido: " + s, Toast.LENGTH_LONG).show();
+
+        switch (msg.objectType) {
+            case HELLO:
+                break;
+            case REQUEST:
+                break;
+            case DISCOVERY:
+                break;
+            case RESULT: //This is gotten by RANGE_EXTENDER only
+                break;
+            case OK:
+                break;
+            default:
+        }
     }
 }

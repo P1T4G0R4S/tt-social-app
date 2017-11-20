@@ -40,7 +40,7 @@ public class NetworkUtil {
         if(myType == DeviceType.EMITTER) {
             // ACCESS_POINT, because it has to send its information to a free ACCESS_POINT
             return discoveredDeviceType.equals(DeviceType.ACCESS_POINT.toString());
-        } else if(myType == DeviceType.ACCESS_POINT_WREQ || myType == DeviceType.ACCESS_POINT_WRES) {
+        }/* else if(myType == DeviceType.ACCESS_POINT_WREQ || myType == DeviceType.ACCESS_POINT_WRES) {
             // RANGE_EXTENDER, because it has to redirect its information to the RANGE_EXTENDER
             // !!! but we don't need to see the RANGE_EXTENDER, it has to see the ACCESS_POINT
             //return discoveredDeviceType.equals(DeviceType.RANGE_EXTENDER.toString());
@@ -59,7 +59,7 @@ public class NetworkUtil {
             return discoveredDeviceType.startsWith(str) && !discoveredDeviceType.endsWith(str);
         } else if(myType == DeviceType.RANGE_EXTENDER_WREQ || myType == DeviceType.RANGE_EXTENDER_WRES) {
             return discoveredDeviceType.equals(DeviceType.ACCESS_POINT.toString());
-        }
+        }*/
         return false;
     }
 
