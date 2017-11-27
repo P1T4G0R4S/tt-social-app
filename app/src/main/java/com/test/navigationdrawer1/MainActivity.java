@@ -43,6 +43,8 @@ import com.test.navigationdrawer1.Network.DeviceType;
 import com.test.navigationdrawer1.Network.Message;
 import com.test.navigationdrawer1.Network.MessageContent;
 import com.test.navigationdrawer1.Network.ObjectType;
+import com.test.navigationdrawer1.REST.IHttpResponseMethods;
+import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
 import com.test.navigationdrawer1.REST.WebApi;
 import com.test.navigationdrawer1.Tasks.SendMessageTask;
 import com.test.navigationdrawer1.Utils.NetworkUtil;
@@ -582,6 +584,12 @@ public class MainActivity extends AppCompatActivity
 
         switch (msg.objectType) {
             case HELLO:
+                api.responseMethods = historialEstadoUsuario;
+                api.CreateHistorialEstadoUsuarios(new HistorialEstadoUsuario(){{
+                    this.id = 10;
+                    this.idEventoHue = 1;
+                    this.idEdoUsrHue = 1;
+                }});
                 break;
             case REQUEST:
                 break;
@@ -594,4 +602,18 @@ public class MainActivity extends AppCompatActivity
             default:
         }
     }
+
+    IHttpResponseMethods historialEstadoUsuario = new IHttpResponseMethods() {
+        @Override
+        public void response(String jsonResponse) {
+            Toast.makeText(getApplicationContext(), jsonResponse,
+                    Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void error(String error) {
+            Toast.makeText(getApplicationContext(), error,
+                    Toast.LENGTH_LONG).show();
+        }
+    };
 }
