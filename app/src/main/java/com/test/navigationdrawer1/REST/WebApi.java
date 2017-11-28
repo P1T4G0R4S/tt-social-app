@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.test.navigationdrawer1.REST.Models.CatEdoReporte;
 import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
 import com.test.navigationdrawer1.REST.Models.ReporteIncidente;
+import com.test.navigationdrawer1.REST.Models.Usuario;
 
 import org.json.JSONObject;
 
@@ -113,6 +114,31 @@ public class WebApi {
     //region cat_edo_usr
     public void QueryCatEdoUsuarios(String query) {
         String url = BaseUrl + "api/cat_edo_usr?filter=%7B%22where%22%3A%22"+ query + "%22%7D";
+
+        new HttpGetRequest(parent).execute(url, responseMethods);
+    }
+    //endregion
+
+    //region usuario
+    public void CreateUsuario(Usuario usuario) {
+        String url = BaseUrl + "api/usuarios";
+
+        JSONObject postDataParams = new JSONObject();
+        try {
+            postDataParams.put("nombre", usuario.nombre);
+            postDataParams.put("correo_electronico", usuario.correoElectronico);
+            postDataParams.put("contrasena", usuario.contrasena);
+
+            new HttpPostRequest(parent).execute(url, responseMethods, postDataParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void QueryUsuario(Usuario usuario) {
+        String url = BaseUrl + "api/usuarios?filter=%7B%22where%22%3A%7B%22correo_electronico%22%3A%22" 
+            + usuario.correoElectronico + "%22%2C%22contrasena%22%3A%22" 
+            + usuario.contrasena + "%22%7D%7D";
 
         new HttpGetRequest(parent).execute(url, responseMethods);
     }
