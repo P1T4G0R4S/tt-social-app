@@ -2,6 +2,8 @@
     <string name="app_name">Finder</string>
 
     <string name="preference_user_key">User</string>
+    <string name="preference_user_saved">email</string>
+    <string name="preference_user_name_saved">name</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

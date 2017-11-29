@@ -20,34 +20,34 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogInActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
     WebApi api;
     SharedPreferences pref;
-    EditText email, password;
-    Button email_sign_in_button, email_sign_up_button;
-    List<Usuario> usuarios;
+    EditText email_signup, password_signup, name_signup;
+    Button email_sign_up_button;
+    Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
+        setContentView(R.layout.activity_sign_up2);
 
         checkUserSharedPreferences();
 
         api = new WebApi(this);
 
-        email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
-        email_sign_in_button = (Button) findViewById(R.id.email_sign_in_button);
+        email_signup = (EditText) findViewById(R.id.email_signup);
+        password_signup = (EditText) findViewById(R.id.password_signup);
+        name_signup = (EditText) findViewById(R.id.name_signup);
         email_sign_up_button = (Button) findViewById(R.id.email_sign_up_button);
 
-        email_sign_in_button.setOnClickListener(login);
         email_sign_up_button.setOnClickListener(signup);
+
     }
 
     private void checkUserSharedPreferences() {
-        pref = LogInActivity.this.getSharedPreferences(
-            getString(R.string.preference_user_key), MODE_PRIVATE);
+        pref = SignupActivity.this.getSharedPreferences(
+                getString(R.string.preference_user_key), MODE_PRIVATE);
 
         String emailShP = pref.getString(getString(R.string.preference_user_saved), "");
         if (!emailShP.equals("")) {
@@ -58,47 +58,35 @@ public class LogInActivity extends AppCompatActivity {
     View.OnClickListener signup = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            navigateToSignUp();
-        }
-    };
-
-    View.OnClickListener login = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
             Usuario usr = new Usuario();
-            usr.correoElectronico = email.getText().toString();
-            usr.contrasena = password.getText().toString();
-            api.responseMethods = queryUsuario;
-            api.QueryUsuario(usr);
+
+            usr.correoElectronico = email_signup.getText().toString();
+            usr.contrasena = password_signup.getText().toString();
+            usr.nombre = name_signup.getText().toString();
+
+            api.responseMethods = createUsuario;
+            api.CreateUsuario(usr);
         }
     };
 
-    private void navigateToMain() {
-        startActivity(new Intent(LogInActivity.this, MainActivity.class));
-        finish();
-    }
-
-    private void navigateToSignUp() {
-        startActivity(new Intent(LogInActivity.this, SignupActivity.class));
-    }
-
-    IHttpResponseMethods queryUsuario = new IHttpResponseMethods() {
+    IHttpResponseMethods createUsuario = new IHttpResponseMethods() {
         @Override
         public void response(String jsonResponse) {
             Toast.makeText(getApplicationContext(), jsonResponse,
                     Toast.LENGTH_LONG).show();
 
             Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<Usuario>>(){}.getType();
-            usuarios = gson.fromJson(jsonResponse, listType);
+            Type listType = new TypeToken<Usuario>(){}.getType();
+            usuario = gson.fromJson(jsonResponse, listType);
 
-            if (usuarios.size() > 0) {
+            if (usuario != null) {
                 navigateToMain();
                 savePreferences();
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.wrong_credentials),
-                    Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_LONG).show();
             }
+
         }
 
         @Override
@@ -109,10 +97,14 @@ public class LogInActivity extends AppCompatActivity {
     };
 
     private void savePreferences() {
-        Usuario usr = usuarios.get(0);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(getString(R.string.preference_user_saved), email.getText().toString());
-        editor.putString(getString(R.string.preference_user_name_saved), usr.nombre);
+        editor.putString(getString(R.string.preference_user_saved), email_signup.getText().toString());
+        editor.putString(getString(R.string.preference_user_name_saved), name_signup.getText().toString());
         editor.apply();
+    }
+
+    private void navigateToMain() {
+        startActivity(new Intent(SignupActivity.this, MainActivity.class));
+        finish();
     }
 }

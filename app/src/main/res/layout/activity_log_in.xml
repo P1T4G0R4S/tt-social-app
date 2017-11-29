@@ -45,15 +45,16 @@
             android:layout_height="wrap_content"
             android:textColorHint="@color/colorAccent">
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:textColor="@color/colorAccent"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._-"
+                android:inputType="textFilter"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -78,6 +79,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
