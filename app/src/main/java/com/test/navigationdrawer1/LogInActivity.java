@@ -49,7 +49,7 @@ public class LogInActivity extends AppCompatActivity {
         pref = LogInActivity.this.getSharedPreferences(
             getString(R.string.preference_user_key), MODE_PRIVATE);
 
-        String emailShP = pref.getString(getString(R.string.preference_user_saved), "");
+        String emailShP = pref.getString(getString(R.string.preference_user_email), "");
         if (!emailShP.equals("")) {
             navigateToMain();
         }
@@ -111,8 +111,9 @@ public class LogInActivity extends AppCompatActivity {
     private void savePreferences() {
         Usuario usr = usuarios.get(0);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(getString(R.string.preference_user_saved), email.getText().toString());
-        editor.putString(getString(R.string.preference_user_name_saved), usr.nombre);
+        editor.putString(getString(R.string.preference_user_email), email.getText().toString());
+        editor.putString(getString(R.string.preference_user_name), usr.nombre);
+        editor.putString(getString(R.string.preference_user_id), usr.id);
         editor.apply();
     }
 }

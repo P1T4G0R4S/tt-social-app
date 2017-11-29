@@ -2,6 +2,7 @@ package com.test.navigationdrawer1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -47,6 +49,7 @@ public class FormReportFragment extends Fragment {
     public static final int PICK_IMAGE = 1;
 
     MainActivity activity;
+    SharedPreferences pref;
     Button publish_report_btn, image_report_btn;
     EditText input_descripcion;
     ImageView image_report_imageview;
@@ -135,12 +138,14 @@ public class FormReportFragment extends Fragment {
     View.OnClickListener btnPublishReport = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            pref = activity.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
+            final String usrId = pref.getString(getString(R.string.preference_user_id), "0");
+
             final Date now = new Date();
             final String lat = String.valueOf(activity.location.getLatitude());
             final String lng = String.valueOf(activity.location.getLongitude());
             final CatEdoReporte selected = (CatEdoReporte)spinner.getSelectedItem();
 
-            //TODO: obtener idUsuarioRI real
             //TODO: validar imagenReporte
             ReporteIncidente test = new ReporteIncidente(){{
                 this.fecha = new SimpleDateFormat(getString(R.string.format_date)).format(now);
@@ -149,7 +154,7 @@ public class FormReportFragment extends Fragment {
                 this.imagenReporte = "";
                 this.latitud = lat;
                 this.longitud = lng;
-                this.idUsuarioRI = 3;
+                this.idUsuarioRI = Integer.parseInt(usrId);
                 this.idEdoReporteRI = selected.id;
                 this.idSismoRegistradoRI = 0;
             }};

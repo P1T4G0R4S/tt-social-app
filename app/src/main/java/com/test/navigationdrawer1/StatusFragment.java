@@ -1,6 +1,7 @@
 package com.test.navigationdrawer1;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,12 +16,15 @@ import android.widget.Toast;
 import com.test.navigationdrawer1.REST.IHttpResponseMethods;
 import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class StatusFragment extends Fragment {
     MainActivity activity;
+    SharedPreferences pref;
 
     public StatusFragment() {
         // Required empty public constructor
@@ -44,22 +48,23 @@ public class StatusFragment extends Fragment {
         switch_status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                pref = activity.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
+                final String userId = pref.getString(getString(R.string.preference_user_id), "0");
+
                 if (b) {
-                    //TODO: colocar los valores correctos
                     activity.api.responseMethods = createHistorialEstadoUsuario;
                     activity.api.CreateHistorialEstadoUsuarios(new HistorialEstadoUsuario(){{
-                        this.id = 3;
-                        this.idEventoHue = 1;
-                        this.idEdoUsrHue = 1;
+                        this.id = Integer.parseInt(userId);
+                        this.idEventoHue = 1; //Constants //TODO: write enum
+                        this.idEdoUsrHue = 1; //Constants //TODO: write enum
                     }});
                     imageView.setImageResource(R.mipmap.ic_secure);
                 } else {
-                    //TODO: colocar los valores correctos
                     activity.api.responseMethods = createHistorialEstadoUsuario;
                     activity.api.CreateHistorialEstadoUsuarios(new HistorialEstadoUsuario(){{
-                        this.id = 3;
-                        this.idEventoHue = 2;
-                        this.idEdoUsrHue = 2;
+                        this.id = Integer.parseInt(userId);
+                        this.idEventoHue = 2; //Constants //TODO: write enum
+                        this.idEdoUsrHue = 2; //Constants //TODO: write enum
                     }});
                     imageView.setImageResource(R.mipmap.ic_unknown);
                 }

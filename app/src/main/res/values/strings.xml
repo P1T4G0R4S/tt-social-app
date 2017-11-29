@@ -4,12 +4,13 @@
     <string name="format_date">dd/MM/yy</string>
     <string name="format_hour">HH:mm:ss</string>
 
-    <string name="preference_device">Options</string>
+    <string name="preference_device_key">Device</string>
     <string name="preference_device_type">devicetype</string>
 
     <string name="preference_user_key">User</string>
-    <string name="preference_user_saved">email</string>
-    <string name="preference_user_name_saved">name</string>
+    <string name="preference_user_email">userEmail</string>
+    <string name="preference_user_name">userName</string>
+    <string name="preference_user_id">userId</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

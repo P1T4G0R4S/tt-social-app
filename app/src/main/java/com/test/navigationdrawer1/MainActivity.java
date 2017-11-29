@@ -38,6 +38,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.test.navigationdrawer1.Adapters.ServiceListViewAdapter;
 import com.test.navigationdrawer1.Network.DeviceType;
 import com.test.navigationdrawer1.Network.Message;
@@ -45,6 +46,7 @@ import com.test.navigationdrawer1.Network.MessageContent;
 import com.test.navigationdrawer1.Network.ObjectType;
 import com.test.navigationdrawer1.REST.IHttpResponseMethods;
 import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
+import com.test.navigationdrawer1.REST.Models.Usuario;
 import com.test.navigationdrawer1.REST.WebApi;
 import com.test.navigationdrawer1.Tasks.SendMessageTask;
 import com.test.navigationdrawer1.Utils.NetworkUtil;
@@ -54,6 +56,7 @@ import net.hockeyapp.android.UpdateManager;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -346,8 +349,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addWifiP2pService() {
-        pref = this.getSharedPreferences("Options", MODE_PRIVATE);
-        int deviceTypePref = pref.getInt("devicetype", DeviceType.EMITTER.getCode());
+        pref = this.getSharedPreferences(getString(R.string.preference_device_key), MODE_PRIVATE);
+        int deviceTypePref = pref.getInt(getString(R.string.preference_device_type), DeviceType.EMITTER.getCode());
         DeviceType deviceType = DeviceType.get(deviceTypePref);
         Log.e("addWifiP2pService", deviceType.toString());
 
@@ -398,10 +401,11 @@ public class MainActivity extends AppCompatActivity
             } else if (intent.getAction().equals(WifiDirectHandler.Action.SERVICE_CONNECTED)) {
                 // This device has connected to another device broadcasting the same service
                 Log.i(TAG, "Service connected onReceive()");
-                pref = context.getSharedPreferences(getString(R.string.preference_device), MODE_PRIVATE);
+                pref = context.getSharedPreferences(getString(R.string.preference_device_key), MODE_PRIVATE);
                 int deviceTypePref = pref.getInt(getString(R.string.preference_device_type),999);
                 DeviceType deviceType = DeviceType.get(deviceTypePref);
                 processConnectionIn(deviceType);
+                //TODO: change deviceType broadcasted in service or halt broadcast or handle exception into slave
 
             } else if (intent.getAction().equals(WifiDirectHandler.Action.MESSAGE_RECEIVED)) {
                 // A message from the Communication Manager has been received
@@ -530,9 +534,14 @@ public class MainActivity extends AppCompatActivity
                 break;
             case EMITTER:
                 Log.i(TAG, "EMITTER");
-                //msg = "{'Label': 'EMITTER -> HELLO', 'Mac':'11:22:33:44:55:66', 'UserName': 'Test'}";
-                //TODO: send user data from shared preferences
-                msg = gson.toJson(new MessageContent("EMITTER -> HELLO", "11:22:33:44:55:66", "Test"));
+
+                pref = this.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
+                String userId = pref.getString(getString(R.string.preference_user_id), "0");
+
+                Usuario usr = new Usuario();
+                usr.id = userId;
+                msg = gson.toJson(usr);
+
                 new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.HELLO);
                 break;
             default:
@@ -573,14 +582,20 @@ public class MainActivity extends AppCompatActivity
 
         switch (msg.objectType) {
             case HELLO:
-                //TODO: parse user received data
+                pref = this.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
+                final String myUserId = pref.getString(getString(R.string.preference_user_id), "0");
+
+                Gson gson = new Gson();
+                Type listType = new TypeToken<Usuario>(){}.getType();
+                final Usuario usr = gson.fromJson(s, listType);
+
                 api.responseMethods = historialEstadoUsuario;
                 api.CreateHistorialEstadoUsuarios(new HistorialEstadoUsuario(){{
-                    this.id = 10;
-                    this.idEventoHue = 1;
-                    this.idEdoUsrHue = 1;
+                    this.id = Integer.parseInt(usr.id); //this is from the found user
+                    this.idEventoHue = 1; //Constant //TODO: write enum
+                    this.idEdoUsrHue = 1; //Constant //TODO: write enum
+                    this.idUsrRegistroHue = Integer.parseInt(myUserId); //my user id
                 }});
-                //TODO: send ACK message; then wait few seconds and close connection
                 break;
             case ACK:
                 break;
@@ -593,12 +608,28 @@ public class MainActivity extends AppCompatActivity
         public void response(String jsonResponse) {
             Toast.makeText(getApplicationContext(), jsonResponse,
                     Toast.LENGTH_LONG).show();
+            //TODO: send ACK message; then wait few seconds and close connection
+            removeWifiP2pService();
+            removeWifiService();
+
+            unregisterManagers();
+
+            registerCommunicationReceiver();
+            addWifiService();
         }
 
         @Override
         public void error(String error) {
             Toast.makeText(getApplicationContext(), error,
                     Toast.LENGTH_LONG).show();
+            //TODO: send ACK message; then wait few seconds and close connection
+            removeWifiP2pService();
+            removeWifiService();
+
+            unregisterManagers();
+
+            registerCommunicationReceiver();
+            addWifiService();
         }
     };
 }
