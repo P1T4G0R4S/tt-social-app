@@ -13,14 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum DeviceType {
-    RANGE_EXTENDER(1),
     ACCESS_POINT(2),
     ACCESS_POINT_WREQ(5),
     ACCESS_POINT_WRES(6),
-    QUERIER(3),
-    QUERIER_ASK(7),
-    RANGE_EXTENDER_WREQ(8),
-    RANGE_EXTENDER_WRES(9),
     EMITTER(4);
 
     private int id;

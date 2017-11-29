@@ -169,8 +169,8 @@ public class MainActivity extends AppCompatActivity
 
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             new AlertDialog.Builder(this)
-                .setTitle("Acceder a mi ubucación")
-                .setMessage("Para permitir un funcionamiento completo de la aplicación, es necesario activar el servicio de ubicación.")
+                .setTitle(getString(R.string.location_activate_title))
+                .setMessage(getString(R.string.location_activate_message))
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -398,8 +398,8 @@ public class MainActivity extends AppCompatActivity
             } else if (intent.getAction().equals(WifiDirectHandler.Action.SERVICE_CONNECTED)) {
                 // This device has connected to another device broadcasting the same service
                 Log.i(TAG, "Service connected onReceive()");
-                pref = context.getSharedPreferences("Options", MODE_PRIVATE);
-                int deviceTypePref = pref.getInt("devicetype",999);
+                pref = context.getSharedPreferences(getString(R.string.preference_device), MODE_PRIVATE);
+                int deviceTypePref = pref.getInt(getString(R.string.preference_device_type),999);
                 DeviceType deviceType = DeviceType.get(deviceTypePref);
                 processConnectionIn(deviceType);
 
@@ -528,23 +528,12 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "ACCESS_POINT_WRES");
                 Log.d(TAG, "Waiting for incoming messages.");
                 break;
-            case RANGE_EXTENDER:
-                Log.i(TAG, "RANGE_EXTENDER");
-                //msg = "{'Label': 'RANGE_EXTENDER -> DISCOVERY'}";
-                msg = gson.toJson(new MessageContent("RANGE_EXTENDER -> DISCOVERY", "", ""));
-                new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.DISCOVERY);
-                break;
             case EMITTER:
                 Log.i(TAG, "EMITTER");
                 //msg = "{'Label': 'EMITTER -> HELLO', 'Mac':'11:22:33:44:55:66', 'UserName': 'Test'}";
+                //TODO: send user data from shared preferences
                 msg = gson.toJson(new MessageContent("EMITTER -> HELLO", "11:22:33:44:55:66", "Test"));
                 new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.HELLO);
-                break;
-            case QUERIER:
-                Log.i(TAG, "QUERIER");
-                //msg = "{'Label': 'QUERIER -> REQUEST', 'Mac':'11:22:33:44:55:66'}";
-                msg = gson.toJson(new MessageContent("QUERIER -> REQUEST", "11:22:33:44:55:66", ""));
-                new SendMessageTask().execute(getWifiHandler(), msg, ObjectType.REQUEST);
                 break;
             default:
                 //new SendMessageTask().execute(activity, json.toJson(activity.curDevice), ObjectType.HELLO);
@@ -584,20 +573,16 @@ public class MainActivity extends AppCompatActivity
 
         switch (msg.objectType) {
             case HELLO:
+                //TODO: parse user received data
                 api.responseMethods = historialEstadoUsuario;
                 api.CreateHistorialEstadoUsuarios(new HistorialEstadoUsuario(){{
                     this.id = 10;
                     this.idEventoHue = 1;
                     this.idEdoUsrHue = 1;
                 }});
+                //TODO: send ACK message; then wait few seconds and close connection
                 break;
-            case REQUEST:
-                break;
-            case DISCOVERY:
-                break;
-            case RESULT: //This is gotten by RANGE_EXTENDER only
-                break;
-            case OK:
+            case ACK:
                 break;
             default:
         }

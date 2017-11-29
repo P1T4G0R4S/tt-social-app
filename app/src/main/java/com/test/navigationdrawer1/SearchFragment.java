@@ -48,8 +48,8 @@ public class SearchFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        pref = activity.getSharedPreferences("Options", MODE_PRIVATE);
-        int deviceTypePref = pref.getInt("devicetype", DeviceType.EMITTER.getCode());
+        pref = activity.getSharedPreferences(getString(R.string.preference_device), MODE_PRIVATE);
+        int deviceTypePref = pref.getInt(getString(R.string.preference_device_type), DeviceType.EMITTER.getCode());
         DeviceType deviceType = DeviceType.get(deviceTypePref);
         Log.e("TEST", "" + deviceType);
         ImageView myImageView= (ImageView)activity.findViewById(R.id.broadcast);

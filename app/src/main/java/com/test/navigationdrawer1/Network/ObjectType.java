@@ -12,5 +12,6 @@ public enum ObjectType {
     RESULT,     //Temporary message that
     WAIT,
     POLL,
-    OK          //All devices to notify reception of sent message (if needed)
+    OK,         //All devices to notify reception of sent message (if needed)
+    ACK         //Notify the reception of sent message
 }

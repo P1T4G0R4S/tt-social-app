@@ -4,13 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.test.navigationdrawer1.RoleFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cambiar rol" />
-
     <RadioGroup
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,12 +11,12 @@
         <RadioButton android:id="@+id/radio_slave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Esclavo"
+            android:text="@string/option_role_slave"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton android:id="@+id/radio_master"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Maestro"
+            android:text="@string/option_role_master"
             android:onClick="onRadioButtonClicked"/>
     </RadioGroup>
 </LinearLayout>

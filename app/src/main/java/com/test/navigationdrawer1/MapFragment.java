@@ -35,8 +35,8 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Personas"));
-        tabLayout.addTab(tabLayout.newTab().setText("Incidentes"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.title_people_tab));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_incident_tab)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);

@@ -18,7 +18,7 @@
                 android:id="@+id/input_descripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Descripcion"
+                android:hint="@string/prompt_desc"
                 android:maxLines="1"
                 android:inputType="text"
                 android:imeOptions="actionDone" />
@@ -32,7 +32,7 @@
 
         <Button
             android:id="@+id/image_report_btn"
-            android:text="Agregar Imagen"
+            android:text="@string/action_add_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -49,7 +49,7 @@
 
         <Button
             android:id="@+id/publish_report_btn"
-            android:text="Publicar Reporte"
+            android:text="@string/action_publish_report"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

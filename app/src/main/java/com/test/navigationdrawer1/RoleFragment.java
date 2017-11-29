@@ -71,9 +71,9 @@ public class RoleFragment extends Fragment {
                     break;
             }
 
-            SharedPreferences.Editor editor = activity.getSharedPreferences("Options", MODE_PRIVATE).edit();
-            editor.putInt("devicetype", device.getCode());
-            editor.commit();
+            SharedPreferences.Editor editor = activity.getSharedPreferences(getString(R.string.preference_device), MODE_PRIVATE).edit();
+            editor.putInt(getString(R.string.preference_device_type), device.getCode());
+            editor.apply();
         }
     };
 }

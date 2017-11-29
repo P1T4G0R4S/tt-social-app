@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Finder</string>
 
+    <string name="format_date">dd/MM/yy</string>
+    <string name="format_hour">HH:mm:ss</string>
+
+    <string name="preference_device">Options</string>
+    <string name="preference_device_type">devicetype</string>
+
     <string name="preference_user_key">User</string>
     <string name="preference_user_saved">email</string>
     <string name="preference_user_name_saved">name</string>
@@ -8,21 +14,39 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="hello_blank_fragment"></string>
+    <string name="hello_blank_fragment"> </string>
     <string name="map_fragment_title">Mapas</string>
     <string name="report_fragment_title">Reportar incidente</string>
     <string name="role_fragment_title">Mi rol</string>
     <string name="search_fragment_title">Buscar a otros</string>
     <string name="status_fragment_title">Mi perfil</string>
 
+    <string name="title_people_tab">Personas</string>
+    <string name="title_incident_tab">Incidentes</string>
+
+    <string name="menu_search">Búsqueda</string>
+    <string name="menu_map">Ver mapa</string>
+    <string name="menu_profile">Mi perfil</string>
+
+    <string name="option_role_master">Maestro</string>
+    <string name="option_role_slave">Esclavo</string>
+
     <string name="prompt_email">Correo electrónico</string>
     <string name="prompt_password">Contraseña</string>
     <string name="prompt_name">Nombre completo</string>
+    <string name="prompt_desc">Descripción</string>
 
     <string name="action_sign_in">Iniciar sesión</string>
     <string name="action_sign_up">Regístrate</string>
     <string name="action_change_role">Cambiar rol</string>
     <string name="action_recover_password">Recuperar contraseña</string>
+    <string name="action_pick_image">Seleccionar imagen</string>
+    <string name="action_connect">Conectar</string>
+    <string name="action_add_image">Agregar imagen</string>
+    <string name="action_publish_report">Publicar reporte</string>
 
     <string name="wrong_credentials">Usuario o contraseña incorrectos</string>
+
+    <string name="location_activate_title">Acceder a mi ubucación</string>
+    <string name="location_activate_message">La aplicación requiere activar el servicio de ubicación.</string>
 </resources>
