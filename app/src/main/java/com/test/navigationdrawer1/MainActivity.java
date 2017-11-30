@@ -213,7 +213,11 @@ public class MainActivity extends AppCompatActivity
             Log.e("GPS", "SÍ SE REQUIRIERON PERMISOS");
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5*1000, 0, locationListener);
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MainActivity.this.getResources().getInteger(R.integer.default_gps_updates), 0,
+                locationListener);
+
         Log.e("GPS", "NO SE REQUIRIERON PERMISOS");
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -276,7 +280,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     resetServiceDiscovery();
-                    Toast.makeText(getApplicationContext(), "Reset", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.action_restart_device_discovery),
+                            Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -287,7 +293,9 @@ public class MainActivity extends AppCompatActivity
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(), "New fragment", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.action_add_report),
+                            Toast.LENGTH_LONG).show();
                     Fragment fragment1 = new FormReportFragment();
 
                     if (fragment1 != null) {
@@ -301,7 +309,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            fab.setImageResource(R.drawable.ic_my_location);
+            fab.setImageResource(R.drawable.ic_pin_drop);
         } else if (itemId == R.id.nav_status) {
             fragment = new StatusFragment();
             getSupportActionBar().setTitle(getString(R.string.status_fragment_title));
@@ -402,6 +410,7 @@ public class MainActivity extends AppCompatActivity
                 // This device has connected to another device broadcasting the same service
                 Log.i(TAG, "Service connected onReceive()");
                 pref = context.getSharedPreferences(getString(R.string.preference_device_key), MODE_PRIVATE);
+                //TODO: research -> what happens when we get 999?
                 int deviceTypePref = pref.getInt(getString(R.string.preference_device_type),999);
                 DeviceType deviceType = DeviceType.get(deviceTypePref);
                 processConnectionIn(deviceType);
@@ -490,11 +499,14 @@ public class MainActivity extends AppCompatActivity
             if (sourceDeviceName.equals("")) {
                 sourceDeviceName = "other device";
             }
-            Toast.makeText(this, "Inviting " + sourceDeviceName + " to connect", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,
+                    String.format(getString(R.string.message_inviting_to_connect), sourceDeviceName),
+                    Toast.LENGTH_LONG).show();
+
             wifiDirectHandler.initiateConnectToService(service);
         } else {
             Log.e(TAG, "Service not available");
-            Toast.makeText(this, "Service not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.message_service_not_available), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -536,7 +548,9 @@ public class MainActivity extends AppCompatActivity
                 Log.i(TAG, "EMITTER");
 
                 pref = this.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
-                String userId = pref.getString(getString(R.string.preference_user_id), "0");
+                String userId = pref.getString(
+                        getString(R.string.preference_user_id),
+                        getString(R.string.default_user_id));
 
                 Usuario usr = new Usuario();
                 usr.id = userId;
@@ -583,7 +597,9 @@ public class MainActivity extends AppCompatActivity
         switch (msg.objectType) {
             case HELLO:
                 pref = this.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
-                final String myUserId = pref.getString(getString(R.string.preference_user_id), "0");
+                final String myUserId = pref.getString(
+                        getString(R.string.preference_user_id),
+                        getString(R.string.default_user_id));
 
                 Gson gson = new Gson();
                 Type listType = new TypeToken<Usuario>(){}.getType();

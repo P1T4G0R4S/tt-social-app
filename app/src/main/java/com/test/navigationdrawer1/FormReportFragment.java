@@ -139,7 +139,9 @@ public class FormReportFragment extends Fragment {
         @Override
         public void onClick(View view) {
             pref = activity.getSharedPreferences(getString(R.string.preference_user_key), MODE_PRIVATE);
-            final String usrId = pref.getString(getString(R.string.preference_user_id), "0");
+            final String usrId = pref.getString(
+                    getString(R.string.preference_user_id),
+                    getString(R.string.default_user_id));
 
             final Date now = new Date();
             final String lat = String.valueOf(activity.location.getLatitude());

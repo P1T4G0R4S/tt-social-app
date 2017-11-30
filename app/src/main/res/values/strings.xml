@@ -4,6 +4,10 @@
     <string name="format_date">dd/MM/yy</string>
     <string name="format_hour">HH:mm:ss</string>
 
+    <string name="default_user_id">0</string>
+    <string name="default_user_email" />
+    <string name="default_user_name" />
+
     <string name="preference_device_key">Device</string>
     <string name="preference_device_type">devicetype</string>
 
@@ -37,6 +41,10 @@
     <string name="prompt_name">Nombre completo</string>
     <string name="prompt_desc">Descripción</string>
 
+    <string name="label_user_name">Nombre: %1$s</string>
+    <string name="label_user_email">Correo: %1$s</string>
+    <string name="label_user_status">Seguro</string>
+
     <string name="action_sign_in">Iniciar sesión</string>
     <string name="action_sign_up">Regístrate</string>
     <string name="action_change_role">Cambiar rol</string>
@@ -45,6 +53,12 @@
     <string name="action_connect">Conectar</string>
     <string name="action_add_image">Agregar imagen</string>
     <string name="action_publish_report">Publicar reporte</string>
+    <string name="action_restart_device_discovery">Reiniciando búsqueda</string>
+    <string name="action_add_report">Agregar reporte</string>
+
+    <string name="message_service_not_available">Servicio no disponible</string>
+    <string name="message_inviting_to_connect">Enviando solicitud a %1$s</string>
+    <string name="message_connection_ready">Conectado</string>
 
     <string name="error_wrong_credentials">Usuario o contraseña incorrectos</string>
     <string name="error_user_already_exists">El usuario ya existe</string>

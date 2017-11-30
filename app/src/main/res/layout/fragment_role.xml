@@ -12,11 +12,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option_role_slave"
+            android:textColor="@color/colorAccent"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton android:id="@+id/radio_master"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option_role_master"
+            android:textColor="@color/colorAccent"
             android:onClick="onRadioButtonClicked"/>
     </RadioGroup>
 </LinearLayout>

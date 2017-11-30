@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/deviceName"
+        android:textColor="@color/colorAccent"
         tools:text="Device name"
         android:textSize="@dimen/abc_text_size_headline_material" />
 
@@ -23,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/deviceInfo"
+            android:textColor="@color/colorAccent"
             tools:text="Device information"/>
 
         <TextView
@@ -33,6 +35,6 @@
             android:layout_gravity="end"
             android:textAlignment="textEnd"
             android:textSize="20sp"
-            android:textColor="#2196F3" />
+            android:textColor="@color/colorPrimaryDark" />
     </RelativeLayout>
 </LinearLayout>

@@ -5,20 +5,43 @@
     android:orientation="vertical"
     tools:context="com.test.navigationdrawer1.StatusFragment">
 
+    <TextView
+        android:id="@+id/textview_user_name"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:text="@string/label_user_name"/>
+
+    <TextView
+        android:id="@+id/textview_user_email"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:text="@string/label_user_email"/>
+
     <Switch
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="50dp"
+        android:padding="25dp"
         android:switchPadding="50dp"
-        android:text="Seguro" />
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:text="@string/label_user_status" />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
+        android:layout_margin="25dp"
         android:src="@mipmap/ic_unknown"/>
 
 </LinearLayout>

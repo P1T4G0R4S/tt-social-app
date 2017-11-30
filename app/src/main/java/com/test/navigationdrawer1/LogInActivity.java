@@ -49,7 +49,9 @@ public class LogInActivity extends AppCompatActivity {
         pref = LogInActivity.this.getSharedPreferences(
             getString(R.string.preference_user_key), MODE_PRIVATE);
 
-        String emailShP = pref.getString(getString(R.string.preference_user_email), "");
+        String emailShP = pref.getString(
+                getString(R.string.preference_user_email),
+                getString(R.string.default_user_email));
         if (!emailShP.equals("")) {
             navigateToMain();
         }

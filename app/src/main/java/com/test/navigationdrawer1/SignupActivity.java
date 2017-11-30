@@ -47,8 +47,10 @@ public class SignupActivity extends AppCompatActivity {
         pref = SignupActivity.this.getSharedPreferences(
                 getString(R.string.preference_user_key), MODE_PRIVATE);
 
-        String emailShP = pref.getString(getString(R.string.preference_user_email), "");
-        if (!emailShP.equals("")) {
+        String emailShP = pref.getString(
+                getString(R.string.preference_user_email),
+                getString(R.string.default_user_email));
+        if (!emailShP.equals(getString(R.string.default_user_email))) {
             navigateToMain();
         }
     }
