@@ -1,25 +1,25 @@
 <resources>
-    <string name="app_name">Finder</string>
+    <string name="app_name" translatable="false">Finder</string>
 
     <string name="format_date">dd/MM/yy</string>
-    <string name="format_hour">HH:mm:ss</string>
+    <string name="format_hour" translatable="false">HH:mm:ss</string>
 
-    <string name="default_user_id">0</string>
-    <string name="default_user_email" />
-    <string name="default_user_name" />
+    <string name="default_user_id" translatable="false">0</string>
+    <string name="default_user_email" translatable="false" />
+    <string name="default_user_name" translatable="false" />
 
-    <string name="preference_device_key">Device</string>
-    <string name="preference_device_type">devicetype</string>
+    <string name="preference_device_key" translatable="false">Device</string>
+    <string name="preference_device_type" translatable="false">devicetype</string>
 
-    <string name="preference_user_key">User</string>
-    <string name="preference_user_email">userEmail</string>
-    <string name="preference_user_name">userName</string>
-    <string name="preference_user_id">userId</string>
+    <string name="preference_user_key" translatable="false">User</string>
+    <string name="preference_user_email" translatable="false">userEmail</string>
+    <string name="preference_user_name" translatable="false">userName</string>
+    <string name="preference_user_id" translatable="false">userId</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="hello_blank_fragment"> </string>
+    <string name="hello_blank_fragment" translatable="false"> </string>
     <string name="map_fragment_title">Mapas</string>
     <string name="report_fragment_title">Reportar incidente</string>
     <string name="role_fragment_title">Mi rol</string>

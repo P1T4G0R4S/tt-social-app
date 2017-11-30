@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_change_role">Cambiar rol</string>
+    <string name="action_add_image">Agregar imagen</string>
+    <string name="action_add_report">Agregar reporte</string>
+    <string name="action_connect">Conectar</string>
+    <string name="action_pick_image">Seleccionar imagen</string>
+    <string name="action_publish_report">Publicar reporte</string>
+    <string name="action_recover_password">Recuperar contraseña</string>
+    <string name="action_restart_device_discovery">Reiniciando búsqueda</string>
+    <string name="action_sign_in">Iniciar sesión</string>
+    <string name="action_sign_up">Regístrate</string>
+    <string name="error_user_already_exists">El usuario ya existe</string>
+    <string name="error_wrong_credentials">Usuario o contraseña incorrectos</string>
+    <string name="format_date">dd/MM/yy</string>
+    <string name="label_user_email">Correo: %1$s</string>
+    <string name="label_user_name">Nombre: %1$s</string>
+    <string name="label_user_status">Seguro</string>
+    <string name="location_activate_message">La aplicación requiere activar el servicio de ubicación.</string>
+    <string name="location_activate_title">Acceder a mi ubucación</string>
+    <string name="map_fragment_title">Mapas</string>
+    <string name="menu_map">Ver mapa</string>
+    <string name="menu_profile">Mi perfil</string>
+    <string name="menu_search">Búsqueda</string>
+    <string name="message_connection_ready">Conectado</string>
+    <string name="message_inviting_to_connect">Enviando solicitud a %1$s</string>
+    <string name="message_service_not_available">Servicio no disponible</string>
+    <string name="option_role_master">Maestro</string>
+    <string name="option_role_slave">Esclavo</string>
+    <string name="prompt_desc">Descripción</string>
+    <string name="prompt_email">Correo electrónico</string>
+    <string name="prompt_name">Nombre completo</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="report_fragment_title">Reportar incidente</string>
+    <string name="role_fragment_title">Mi rol</string>
+    <string name="search_fragment_title">Buscar a otros</string>
+    <string name="status_fragment_title">Mi perfil</string>
+    <string name="title_incident_tab">Incidentes</string>
+    <string name="title_people_tab">Personas</string>
+</resources>
