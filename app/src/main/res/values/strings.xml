@@ -46,7 +46,8 @@
     <string name="action_add_image">Agregar imagen</string>
     <string name="action_publish_report">Publicar reporte</string>
 
-    <string name="wrong_credentials">Usuario o contraseña incorrectos</string>
+    <string name="error_wrong_credentials">Usuario o contraseña incorrectos</string>
+    <string name="error_user_already_exists">El usuario ya existe</string>
 
     <string name="location_activate_title">Acceder a mi ubucación</string>
     <string name="location_activate_message">La aplicación requiere activar el servicio de ubicación.</string>

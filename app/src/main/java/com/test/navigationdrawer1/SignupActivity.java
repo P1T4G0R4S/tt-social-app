@@ -2,13 +2,13 @@ package com.test.navigationdrawer1;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,8 +17,6 @@ import com.test.navigationdrawer1.REST.Models.Usuario;
 import com.test.navigationdrawer1.REST.WebApi;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SignupActivity extends AppCompatActivity {
     WebApi api;
@@ -72,8 +70,7 @@ public class SignupActivity extends AppCompatActivity {
     IHttpResponseMethods createUsuario = new IHttpResponseMethods() {
         @Override
         public void response(String jsonResponse) {
-            Toast.makeText(getApplicationContext(), jsonResponse,
-                    Toast.LENGTH_LONG).show();
+            Log.e("createUsuario", jsonResponse);
 
             Gson gson = new Gson();
             Type listType = new TypeToken<Usuario>(){}.getType();
@@ -83,16 +80,15 @@ public class SignupActivity extends AppCompatActivity {
                 navigateToMain();
                 savePreferences();
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.wrong_credentials),
-                        Toast.LENGTH_LONG).show();
+                Snackbar.make(email_sign_up_button, getString(R.string.error_user_already_exists),
+                        Snackbar.LENGTH_LONG).show();
             }
 
         }
 
         @Override
         public void error(String error) {
-            Toast.makeText(getApplicationContext(), error,
-                    Toast.LENGTH_LONG).show();
+            Log.e("createUsuario", error);
         }
     };
 
