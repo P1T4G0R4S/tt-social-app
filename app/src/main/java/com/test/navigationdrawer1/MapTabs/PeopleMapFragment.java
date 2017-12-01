@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,25 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.test.navigationdrawer1.R;
+import com.test.navigationdrawer1.REST.IHttpResponseMethods;
+import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
+import com.test.navigationdrawer1.REST.WebApi;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PeopleMapFragment extends Fragment {
+    WebApi api;
     MapView mMapView;
     private GoogleMap googleMap;
+    List<HistorialEstadoUsuario> historial_edo_usuarios;
 
     public PeopleMapFragment() {
         // Required empty public constructor
@@ -47,6 +59,9 @@ public class PeopleMapFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
+
+        api.responseMethods = queryHistorialEstadoUsuarios;
+        api.QueryAllHistorialEstadoUsuarios();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -114,4 +129,31 @@ public class PeopleMapFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+
+
+    IHttpResponseMethods queryHistorialEstadoUsuarios = new IHttpResponseMethods() {
+        @Override
+        public void response(String jsonResponse) {
+            Toast.makeText(getContext(), jsonResponse, Toast.LENGTH_LONG).show();
+            Log.w("TEST", jsonResponse);
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<HistorialEstadoUsuario>>(){}.getType();
+            historial_edo_usuarios = gson.fromJson(jsonResponse, listType);
+
+            for(HistorialEstadoUsuario heu : historial_edo_usuarios) {
+                Log.e("Test", String.valueOf(heu.id));
+                Log.e("Test", String.valueOf(heu.idEdoUsrHue));
+                Log.e("Test", String.valueOf(heu.idEventoHue));
+                Log.e("Test", String.valueOf(heu.idUsrRegistroHue));
+            }
+        }
+
+        @Override
+        public void error(String error) {
+            Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+            Log.w("TEST", error);
+        }
+    };
 }

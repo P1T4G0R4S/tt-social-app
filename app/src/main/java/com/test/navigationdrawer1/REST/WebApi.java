@@ -2,6 +2,7 @@ package com.test.navigationdrawer1.REST;
 
 import android.app.Activity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.test.navigationdrawer1.REST.Models.CatEdoReporte;
 import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
 import com.test.navigationdrawer1.REST.Models.ReporteIncidente;
@@ -108,6 +109,19 @@ public class WebApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void QueryHistorialEstadoUsuariosByLocation(String lat, String lon) {
+        String location = lat + "," + lon;
+        String url = BaseUrl + "";
+
+        new HttpGetRequest(parent).execute(url, responseMethods);
+    }
+
+    public void QueryAllHistorialEstadoUsuarios() {
+        String url = BaseUrl + "api/historial_estado_usuarios";
+
+        new HttpGetRequest(parent).execute(url, responseMethods);
     }
     //endregion
 
