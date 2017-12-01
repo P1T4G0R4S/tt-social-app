@@ -95,6 +95,8 @@ public class SignupActivity extends AppCompatActivity {
     };
 
     private void savePreferences() {
+        pref = SignupActivity.this.getSharedPreferences(
+                getString(R.string.preference_user_key), MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(getString(R.string.preference_user_email), email_signup.getText().toString());
         editor.putString(getString(R.string.preference_user_name), name_signup.getText().toString());

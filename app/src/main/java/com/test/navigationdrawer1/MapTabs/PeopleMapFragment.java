@@ -60,6 +60,7 @@ public class PeopleMapFragment extends Fragment {
 
         mMapView.onResume();
 
+        api = new WebApi(getActivity());
         api.responseMethods = queryHistorialEstadoUsuarios;
         api.QueryAllHistorialEstadoUsuarios();
 

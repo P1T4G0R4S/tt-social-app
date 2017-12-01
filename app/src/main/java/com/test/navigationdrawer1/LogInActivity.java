@@ -110,6 +110,8 @@ public class LogInActivity extends AppCompatActivity {
 
     private void savePreferences() {
         Usuario usr = usuarios.get(0);
+        pref = LogInActivity.this.getSharedPreferences(
+                getString(R.string.preference_user_key), MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(getString(R.string.preference_user_email), email.getText().toString());
         editor.putString(getString(R.string.preference_user_name), usr.nombre);

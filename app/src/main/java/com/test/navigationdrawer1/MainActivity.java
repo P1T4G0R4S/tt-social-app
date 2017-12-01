@@ -377,10 +377,13 @@ public class MainActivity extends AppCompatActivity
 
     private void setServiceList() {
         deviceList = (ListView)findViewById(R.id.device_list);
-        servicesListAdapter = new ServiceListViewAdapter(this, services);
-        deviceList.setAdapter(servicesListAdapter);
-        services.clear();
-        servicesListAdapter.notifyDataSetChanged();
+
+        if (deviceList != null) {
+            servicesListAdapter = new ServiceListViewAdapter(this, services);
+            deviceList.setAdapter(servicesListAdapter);
+            services.clear();
+            servicesListAdapter.notifyDataSetChanged();
+        }
     }
 
     public class CommunicationReceiver extends BroadcastReceiver {
