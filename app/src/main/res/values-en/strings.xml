@@ -37,4 +37,6 @@
     <string name="title_people_tab">People</string>
     <string name="message_service_not_available">Service not available</string>
     <string name="message_inviting_to_connect">Sending request to %1$s</string>
+    <string name="label_report_datetime">Datetime</string>
+    <string name="label_report_desc">Description</string>
 </resources>

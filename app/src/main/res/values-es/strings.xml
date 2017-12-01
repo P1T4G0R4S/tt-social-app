@@ -37,4 +37,6 @@
     <string name="status_fragment_title">Mi perfil</string>
     <string name="title_incident_tab">Incidentes</string>
     <string name="title_people_tab">Personas</string>
+    <string name="label_report_datetime">Fecha y hora</string>
+    <string name="label_report_desc">Descripción</string>
 </resources>
