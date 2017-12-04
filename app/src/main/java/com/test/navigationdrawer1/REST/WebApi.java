@@ -45,6 +45,12 @@ public class WebApi {
     //endregion
 
     //region reporte_incidentes
+    public void QueryAllReporteIncidente() {
+        String url = BaseUrl + "api/reporte_incidentes";
+
+        new HttpGetRequest(parent).execute(url, responseMethods);
+    }
+
     public void CreateReporteIncidente(ReporteIncidente reporteIncidente) {
         String url = BaseUrl + "api/reporte_incidentes";
 

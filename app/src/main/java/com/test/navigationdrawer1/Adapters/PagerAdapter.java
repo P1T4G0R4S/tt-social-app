@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.test.navigationdrawer1.ListTab.ReportsListFragment;
 import com.test.navigationdrawer1.MapTabs.PeopleMapFragment;
 import com.test.navigationdrawer1.MapTabs.ReportsMapFragment;
 
@@ -26,7 +27,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 PeopleMapFragment tab1 = new PeopleMapFragment();
                 return tab1;
             case 1:
-                ReportsMapFragment tab2 = new ReportsMapFragment();
+                //ReportsMapFragment tab2 = new ReportsMapFragment();
+                ReportsListFragment tab2 = new ReportsListFragment();
                 return tab2;
             default:
                 return null;

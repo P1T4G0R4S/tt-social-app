@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestCoordinator;
 import com.test.navigationdrawer1.R;
 import com.test.navigationdrawer1.REST.Models.ReporteIncidente;
 
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHolder> {
     private List<ReporteIncidente> reportsList;
-    private Fragment parent;
+    RequestManager glide;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView report_item_datetime, report_item_desc;
@@ -30,12 +32,12 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHo
 
         public MyViewHolder(View view) {
             super(view);
+            glide = Glide.with(view.getContext());
             report_item_image = (ImageView) view.findViewById(R.id.report_item_image);
             report_item_datetime = (TextView) view.findViewById(R.id.report_item_datetime);
             report_item_desc = (TextView) view.findViewById(R.id.report_item_desc);
         }
     }
-
 
     public ReportsAdapter(List<ReporteIncidente> reportsList) {
         this.reportsList = reportsList;
@@ -60,8 +62,7 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHo
                 reporteIncidente.imagenReporte;
 
         // https://stackoverflow.com/a/43971942
-        Glide.with(parent)
-                .load(url)
+        glide.load(url)
                 .placeholder(R.drawable.ic_image)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -71,5 +72,15 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHo
     @Override
     public int getItemCount() {
         return reportsList.size();
+    }
+
+    public void clear() {
+        this.reportsList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<ReporteIncidente> reportsList) {
+        this.reportsList.addAll(reportsList);
+        notifyDataSetChanged(); 
     }
 }
