@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        displaySelectectedScreen(R.id.nav_search);
+        displaySelectectedScreen(R.id.nav_map);
         networkUtil = NetworkUtil.getInstance(DeviceType.EMITTER);
 
         setupLocationProvider();
@@ -614,6 +614,8 @@ public class MainActivity extends AppCompatActivity
                     this.idEventoHue = 1; //Constant //TODO: write enum
                     this.idEdoUsrHue = 1; //Constant //TODO: write enum
                     this.idUsrRegistroHue = Integer.parseInt(myUserId); //my user id
+                    this.latitud = String.valueOf(MainActivity.this.location.getLatitude());
+                    this.longitud = String.valueOf(MainActivity.this.location.getLongitude());
                 }});
                 break;
             case ACK:

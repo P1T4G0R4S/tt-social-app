@@ -75,24 +75,6 @@ public class PeopleMapFragment extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(19.4978, -99.1269);
-                LatLng sydney1 = new LatLng(19.50, -99.1269);
-                LatLng sydney2 = new LatLng(19.48, -99.1269);
-                LatLng sydney3 = new LatLng(19.4978, -99.13);
-                LatLng sydney4 = new LatLng(19.4978, -99.11);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-                googleMap.addMarker(new MarkerOptions().position(sydney1).title("Marker Title").snippet("Marker Description"));
-                googleMap.addMarker(new MarkerOptions().position(sydney2).title("Marker Title").snippet("Marker Description"));
-                googleMap.addMarker(new MarkerOptions().position(sydney3).title("Marker Title").snippet("Marker Description"));
-                googleMap.addMarker(new MarkerOptions().position(sydney4).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(13).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setOnMarkerClickListener(markerClickListener);
-                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
@@ -148,6 +130,21 @@ public class PeopleMapFragment extends Fragment {
                 Log.e("Test", String.valueOf(heu.idEdoUsrHue));
                 Log.e("Test", String.valueOf(heu.idEventoHue));
                 Log.e("Test", String.valueOf(heu.idUsrRegistroHue));
+                Log.e("Test", String.valueOf(heu.latitud));
+                Log.e("Test", String.valueOf(heu.longitud));
+
+                LatLng marker = new LatLng(Double.valueOf(heu.latitud), Double.valueOf(heu.longitud));
+                googleMap.addMarker(
+                        new MarkerOptions()
+                                .position(marker)
+                                .title("Marker Title")
+                                .snippet("Marker Description")
+                );
+
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(marker).zoom(13).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setOnMarkerClickListener(markerClickListener);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             }
         }
 

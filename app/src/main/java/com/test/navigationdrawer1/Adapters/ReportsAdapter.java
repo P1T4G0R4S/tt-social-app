@@ -64,7 +64,7 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.MyViewHo
         // https://stackoverflow.com/a/43971942
         glide.load(url)
                 .placeholder(R.drawable.ic_image)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .skipMemoryCache(true)
                 .into(holder.report_item_image);
     }
