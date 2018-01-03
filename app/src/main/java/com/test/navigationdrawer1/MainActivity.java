@@ -37,9 +37,11 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.test.navigationdrawer1.Adapters.ServiceListViewAdapter;
+import com.test.navigationdrawer1.Firebase.FirebaseNotification;
 import com.test.navigationdrawer1.Network.DeviceType;
 import com.test.navigationdrawer1.Network.Message;
 import com.test.navigationdrawer1.Network.MessageContent;
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         context = this;
 
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+
         api = new WebApi(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        displaySelectectedScreen(R.id.nav_map);
+        displaySelectectedScreen(R.id.nav_search);
         networkUtil = NetworkUtil.getInstance(DeviceType.EMITTER);
 
         setupLocationProvider();

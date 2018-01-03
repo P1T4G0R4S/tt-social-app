@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,12 +71,24 @@ public class StatusFragment extends Fragment {
                         getString(R.string.preference_user_id),
                         getString(R.string.default_user_id));
 
+                String latitude = null;
+                String longitude = null;
+
+                if (activity.location != null) {
+                    latitude = String.valueOf(activity.location.getLatitude());
+                    longitude = String.valueOf(activity.location.getLongitude());
+                }
+                final String finalLatitude = latitude;
+                final String finalLongitude = longitude;
+
                 if (b) {
                     activity.api.responseMethods = createHistorialEstadoUsuario;
                     activity.api.CreateHistorialEstadoUsuarios(new HistorialEstadoUsuario(){{
                         this.id = Integer.parseInt(userId);
                         this.idEventoHue = 1; //Constants //TODO: write enum
                         this.idEdoUsrHue = 1; //Constants //TODO: write enum
+                        this.latitud = finalLatitude;
+                        this.longitud = finalLongitude;
                     }});
                     imageView.setImageResource(R.mipmap.ic_secure);
                     switch_status.setClickable(false);
@@ -86,6 +99,9 @@ public class StatusFragment extends Fragment {
                         this.id = Integer.parseInt(userId);
                         this.idEventoHue = 2; //Constants //TODO: write enum
                         this.idEdoUsrHue = 2; //Constants //TODO: write enum
+                        this.latitud = finalLatitude;
+                        this.longitud = finalLongitude
+                        ;
                     }});
                     imageView.setImageResource(R.mipmap.ic_unknown);
                 }

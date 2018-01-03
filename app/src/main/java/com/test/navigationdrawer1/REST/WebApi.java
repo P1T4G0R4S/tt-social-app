@@ -118,8 +118,8 @@ public class WebApi {
     }
 
     public void QueryHistorialEstadoUsuariosByLocation(String lat, String lon) {
-        String location = lat + "," + lon;
-        String url = BaseUrl + "";
+        String location = "?lat=" + lat + "&lng=" + lon;
+        String url = BaseUrl + "api/getUserDataWithLocation";
 
         new HttpGetRequest(parent).execute(url, responseMethods);
     }

@@ -118,6 +118,29 @@ public class PeopleMapFragment extends Fragment {
     IHttpResponseMethods queryHistorialEstadoUsuarios = new IHttpResponseMethods() {
         @Override
         public void response(String jsonResponse) {
+
+            /*LatLng marker = new LatLng(Double.valueOf("19.506426"), Double.valueOf("-99.1253817"));
+            googleMap.addMarker(
+                    new MarkerOptions()
+                            .position(marker)
+                            .title("Persona 1")
+                            .snippet("Persona 1")
+            );
+            LatLng marker1 = new LatLng(Double.valueOf("19.5062783"), Double.valueOf("-99.1228712"));
+            googleMap.addMarker(
+                    new MarkerOptions()
+                            .position(marker1)
+                            .title("Persona 2")
+                            .snippet("Persona 2")
+            );
+            LatLng marker2 = new LatLng(Double.valueOf("19.5056593"), Double.valueOf("-99.1237612"));
+            googleMap.addMarker(
+                    new MarkerOptions()
+                            .position(marker2)
+                            .title("Persona 3")
+                            .snippet("Persona 3")
+            );*/
+
             Toast.makeText(getContext(), jsonResponse, Toast.LENGTH_LONG).show();
             Log.w("TEST", jsonResponse);
 
@@ -133,15 +156,15 @@ public class PeopleMapFragment extends Fragment {
                 Log.e("Test", String.valueOf(heu.latitud));
                 Log.e("Test", String.valueOf(heu.longitud));
 
-                LatLng marker = new LatLng(Double.valueOf(heu.latitud), Double.valueOf(heu.longitud));
+                LatLng markerm = new LatLng(Double.valueOf(heu.latitud), Double.valueOf(heu.longitud));
                 googleMap.addMarker(
                         new MarkerOptions()
-                                .position(marker)
+                                .position(markerm)
                                 .title("Marker Title")
                                 .snippet("Marker Description")
                 );
 
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(marker).zoom(13).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(markerm).zoom(13).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 googleMap.setOnMarkerClickListener(markerClickListener);
                 googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
