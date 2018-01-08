@@ -193,6 +193,13 @@ public class MainActivity extends AppCompatActivity
                 // Called when a new location is found by the network location provider.
                 MainActivity.this.location = location;
                 Log.e("LOCATION", "" + location.getLatitude() + "/" + location.getLongitude());
+
+                pref = MainActivity.this.getSharedPreferences(
+                        getString(R.string.preference_device_key), MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString(getString(R.string.location_lat), String.valueOf(location.getLatitude()));
+                editor.putString(getString(R.string.location_lng), String.valueOf(location.getLongitude()));
+                editor.apply();
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {

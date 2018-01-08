@@ -67,4 +67,6 @@
     <string name="location_activate_message">La aplicación requiere activar el servicio de ubicación.</string>
     <string name="label_report_desc">Descripción</string>
     <string name="label_report_datetime">Fecha y hora</string>
+    <string name="location_lat" translatable="false">location_lat</string>
+    <string name="location_lng" translatable="false">location_lng</string>
 </resources>

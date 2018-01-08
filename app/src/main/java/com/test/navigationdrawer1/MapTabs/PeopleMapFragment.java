@@ -2,11 +2,13 @@ package com.test.navigationdrawer1.MapTabs;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +26,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.test.navigationdrawer1.Details.PersonDetailFragment;
 import com.test.navigationdrawer1.R;
 import com.test.navigationdrawer1.REST.IHttpResponseMethods;
 import com.test.navigationdrawer1.REST.Models.HistorialEstadoUsuario;
+import com.test.navigationdrawer1.REST.Models.HueUserData;
 import com.test.navigationdrawer1.REST.WebApi;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +50,8 @@ public class PeopleMapFragment extends Fragment {
     WebApi api;
     MapView mMapView;
     private GoogleMap googleMap;
-    List<HistorialEstadoUsuario> historial_edo_usuarios;
+    SharedPreferences pref;
+    List<HueUserData> historial_edo_usuarios;
 
     public PeopleMapFragment() {
         // Required empty public constructor
@@ -59,10 +70,13 @@ public class PeopleMapFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
+        pref = getActivity().getSharedPreferences(getString(R.string.preference_device_key), MODE_PRIVATE);
+        String lat = pref.getString(getString(R.string.location_lat), "");
+        String lng = pref.getString(getString(R.string.location_lng), "");
 
         api = new WebApi(getActivity());
         api.responseMethods = queryHistorialEstadoUsuarios;
-        api.QueryAllHistorialEstadoUsuarios();
+        api.QueryHistorialEstadoUsuariosByLocation(lat, lng);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -96,6 +110,18 @@ public class PeopleMapFragment extends Fragment {
         public boolean onMarkerClick(Marker marker) {
             Toast.makeText(getActivity(), marker.getPosition().latitude + "/" + marker.getPosition().longitude, Toast.LENGTH_LONG).show();
 
+            String lat = String.valueOf(marker.getPosition().latitude);
+            String lon = String.valueOf(marker.getPosition().longitude);
+
+            /*if (marker.isInfoWindowShown()) {
+                PersonDetailFragment fragment = new PersonDetailFragment();
+
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+            }*/
+
             // true if the listener has consumed the event (i.e., the default behavior should
             // not occur); false otherwise (i.e., the default behavior should occur). The default
             // behavior is for the camera to move to the marker and an info window to appear.
@@ -118,50 +144,38 @@ public class PeopleMapFragment extends Fragment {
     IHttpResponseMethods queryHistorialEstadoUsuarios = new IHttpResponseMethods() {
         @Override
         public void response(String jsonResponse) {
-
-            /*LatLng marker = new LatLng(Double.valueOf("19.506426"), Double.valueOf("-99.1253817"));
-            googleMap.addMarker(
-                    new MarkerOptions()
-                            .position(marker)
-                            .title("Persona 1")
-                            .snippet("Persona 1")
-            );
-            LatLng marker1 = new LatLng(Double.valueOf("19.5062783"), Double.valueOf("-99.1228712"));
-            googleMap.addMarker(
-                    new MarkerOptions()
-                            .position(marker1)
-                            .title("Persona 2")
-                            .snippet("Persona 2")
-            );
-            LatLng marker2 = new LatLng(Double.valueOf("19.5056593"), Double.valueOf("-99.1237612"));
-            googleMap.addMarker(
-                    new MarkerOptions()
-                            .position(marker2)
-                            .title("Persona 3")
-                            .snippet("Persona 3")
-            );*/
-
-            Toast.makeText(getContext(), jsonResponse, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getContext(), jsonResponse, Toast.LENGTH_LONG).show();
             Log.w("TEST", jsonResponse);
+            String jsonArray = "";
+
+            try {
+                JSONObject object = new JSONObject(jsonResponse);
+                JSONArray results = object.getJSONArray("result");
+                jsonArray = results.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.w("TEST", jsonArray);
+            Log.w("TEST", String.valueOf(jsonArray.length()));
 
             Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<HistorialEstadoUsuario>>(){}.getType();
-            historial_edo_usuarios = gson.fromJson(jsonResponse, listType);
+            Type listType = new TypeToken<ArrayList<HueUserData>>(){}.getType();
+            historial_edo_usuarios = gson.fromJson(jsonArray, listType);
 
-            for(HistorialEstadoUsuario heu : historial_edo_usuarios) {
+            for(HueUserData heu : historial_edo_usuarios) {
                 Log.e("Test", String.valueOf(heu.id));
-                Log.e("Test", String.valueOf(heu.idEdoUsrHue));
-                Log.e("Test", String.valueOf(heu.idEventoHue));
-                Log.e("Test", String.valueOf(heu.idUsrRegistroHue));
                 Log.e("Test", String.valueOf(heu.latitud));
                 Log.e("Test", String.valueOf(heu.longitud));
+                Log.e("Test", String.valueOf(heu.nombre));
+                Log.e("Test", String.valueOf(heu.email));
 
                 LatLng markerm = new LatLng(Double.valueOf(heu.latitud), Double.valueOf(heu.longitud));
                 googleMap.addMarker(
                         new MarkerOptions()
                                 .position(markerm)
-                                .title("Marker Title")
-                                .snippet("Marker Description")
+                                .title(heu.nombre)
+                                .snippet(heu.email)
                 );
 
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(markerm).zoom(13).build();

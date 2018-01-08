@@ -15,7 +15,7 @@ import org.json.JSONObject;
  */
 
 public class WebApi {
-    private final String BaseUrl = "https://floating-sands-67659.herokuapp.com/";//"http://192.168.1.75:3000/";
+    private final String BaseUrl = "https://floating-sands-67659.herokuapp.com/";//"http://192.168.1.68:3000/";//
     private final Activity parent;
 
     public IHttpResponseMethods responseMethods;
@@ -89,6 +89,20 @@ public class WebApi {
             e.printStackTrace();
         }
     }
+
+    public void UploadImageReporteIncidente(String imagenReporte, ReporteIncidente reporteIncidente) {
+        String url = BaseUrl + "api/usuarios/uploadImage";
+
+        JSONObject postDataParams = new JSONObject();
+        try {
+            postDataParams.put("image", imagenReporte);
+            postDataParams.put("id", String.valueOf(reporteIncidente.id));
+
+            new HttpPostRequest(parent).execute(url, responseMethods, postDataParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     //endregion
 
     //region historial_estado_usuarios
@@ -119,7 +133,7 @@ public class WebApi {
 
     public void QueryHistorialEstadoUsuariosByLocation(String lat, String lon) {
         String location = "?lat=" + lat + "&lng=" + lon;
-        String url = BaseUrl + "api/getUserDataWithLocation";
+        String url = BaseUrl + "api/historial_estado_usuarios/getUserDataWithLocation" + location;
 
         new HttpGetRequest(parent).execute(url, responseMethods);
     }

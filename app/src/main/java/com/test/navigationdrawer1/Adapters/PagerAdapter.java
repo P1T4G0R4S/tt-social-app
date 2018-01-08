@@ -27,8 +27,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 PeopleMapFragment tab1 = new PeopleMapFragment();
                 return tab1;
             case 1:
-                //ReportsMapFragment tab2 = new ReportsMapFragment();
-                ReportsListFragment tab2 = new ReportsListFragment();
+                ReportsMapFragment tab2 = new ReportsMapFragment();
+                //ReportsListFragment tab2 = new ReportsListFragment();
                 return tab2;
             default:
                 return null;

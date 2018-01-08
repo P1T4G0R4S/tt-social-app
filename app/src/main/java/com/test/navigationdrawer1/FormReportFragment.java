@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class FormReportFragment extends Fragment {
     public static final int PICK_IMAGE = 1;
 
+    String imageString;
     MainActivity activity;
     SharedPreferences pref;
     Button publish_report_btn, image_report_btn;
@@ -126,6 +128,14 @@ public class FormReportFragment extends Fragment {
         public void response(String jsonResponse) {
             Toast.makeText(activity.getApplicationContext(), jsonResponse,
                     Toast.LENGTH_LONG).show();
+            Log.d("TEST", jsonResponse);
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ReporteIncidente>(){}.getType();
+            ReporteIncidente reporte_incidente = gson.fromJson(jsonResponse, listType);
+
+            activity.api.responseMethods = uploadImage;
+            activity.api.UploadImageReporteIncidente(imageString, reporte_incidente);
         }
 
         @Override
@@ -197,10 +207,9 @@ public class FormReportFragment extends Fragment {
                 try {
                     Bitmap reportPic = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), imageUri);
 
-                    String imageString = getImageBase64String(reportPic);
+                    imageString = getImageBase64String(reportPic);
 
-                    activity.api.responseMethods = uploadImage;
-                    activity.api.UploadImageReporteIncidente(imageString);
+                    Toast.makeText(getContext(), "Imagen pre-cargada", Toast.LENGTH_SHORT);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -211,14 +220,24 @@ public class FormReportFragment extends Fragment {
     IHttpResponseMethods uploadImage = new IHttpResponseMethods() {
         @Override
         public void response(String jsonResponse) {
-            Toast.makeText(activity.getApplicationContext(), jsonResponse,
-                    Toast.LENGTH_LONG).show();
+            /*Toast.makeText(activity.getApplicationContext(), jsonResponse,
+                    Toast.LENGTH_LONG).show();*/
+
+            MapFragment fragment = new MapFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         }
 
         @Override
         public void error(String error) {
-            Toast.makeText(activity.getApplicationContext(), error,
-                    Toast.LENGTH_LONG).show();
+            /*Toast.makeText(activity.getApplicationContext(), error,
+                    Toast.LENGTH_LONG).show();*/
+
+            MapFragment fragment = new MapFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         }
     };
 
@@ -227,8 +246,7 @@ public class FormReportFragment extends Fragment {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
-        final String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return imageString;
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     @Override
