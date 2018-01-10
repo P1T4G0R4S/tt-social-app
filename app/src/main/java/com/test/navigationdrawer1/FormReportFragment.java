@@ -55,8 +55,6 @@ public class FormReportFragment extends Fragment {
     Button publish_report_btn, image_report_btn;
     EditText input_descripcion;
     ImageView image_report_imageview;
-    Spinner spinner;
-    List<CatEdoReporte> edoReporte;
 
     public FormReportFragment() {
     }
@@ -73,7 +71,6 @@ public class FormReportFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_form_report, container, false);
 
         activity = (MainActivity) getActivity();
-        spinner = (Spinner) view.findViewById(R.id.spinner);
         input_descripcion = (EditText) view.findViewById(R.id.input_descripcion);
         publish_report_btn = (Button) view.findViewById(R.id.publish_report_btn);
         image_report_imageview = (ImageView) view.findViewById(R.id.image_report_imageview);
@@ -82,46 +79,8 @@ public class FormReportFragment extends Fragment {
         publish_report_btn.setOnClickListener(btnPublishReport);
         image_report_btn.setOnClickListener(btnOpenGalleries);
 
-        activity.api.responseMethods = queryCatEdoReporte;
-        activity.api.QueryCatEdoReportes("");
-
         return view;
     }
-
-    IHttpResponseMethods queryCatEdoReporte = new IHttpResponseMethods() {
-        @Override
-        public void response(String jsonResponse) {
-            Toast.makeText(activity.getApplicationContext(), jsonResponse,
-                    Toast.LENGTH_LONG).show();
-
-            Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<CatEdoReporte>>(){}.getType();
-            edoReporte = gson.fromJson(jsonResponse, listType);
-
-            GenericSpinnerAdapter myAdapter = new GenericSpinnerAdapter<>(getActivity(), edoReporte);
-            spinner.setAdapter(myAdapter);
-            spinner.setOnItemSelectedListener(spinnerAdapter);
-        }
-
-        @Override
-        public void error(String error) {
-            Toast.makeText(activity.getApplicationContext(), error,
-                    Toast.LENGTH_LONG).show();
-        }
-    };
-
-    AdapterView.OnItemSelectedListener spinnerAdapter = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            CatEdoReporte selected = (CatEdoReporte)spinner.getSelectedItem();
-            Log.e("SpinnerAdapter", "" + selected.id + "/" + selected.edoReporte);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> adapterView) {
-
-        }
-    };
 
     IHttpResponseMethods createReporte = new IHttpResponseMethods() {
         @Override
@@ -156,7 +115,6 @@ public class FormReportFragment extends Fragment {
             final Date now = new Date();
             final String lat = String.valueOf(activity.location.getLatitude());
             final String lng = String.valueOf(activity.location.getLongitude());
-            final CatEdoReporte selected = (CatEdoReporte)spinner.getSelectedItem();
 
             //TODO: validar imagenReporte
             ReporteIncidente test = new ReporteIncidente(){{
@@ -167,7 +125,7 @@ public class FormReportFragment extends Fragment {
                 this.latitud = lat;
                 this.longitud = lng;
                 this.idUsuarioRI = Integer.parseInt(usrId);
-                this.idEdoReporteRI = selected.id;
+                this.idEdoReporteRI = 4;
                 this.idSismoRegistradoRI = 0;
             }};
 

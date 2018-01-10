@@ -12,6 +12,17 @@
         android:layout_gravity="center"
         android:src="@mipmap/ic_broadcast"/>
 
+    <ProgressBar
+        android:id="@+id/circular_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="30dp"
+        android:indeterminate="false"
+        android:max="48"
+        android:progress="1"
+        android:progressDrawable="@drawable/circular_progressbar" />
+
     <ListView
         android:id="@+id/device_list"
         android:layout_width="match_parent"

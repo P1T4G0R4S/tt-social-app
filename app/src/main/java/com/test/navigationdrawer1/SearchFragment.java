@@ -1,5 +1,7 @@
 package com.test.navigationdrawer1;
 
+import android.animation.ObjectAnimator;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.test.navigationdrawer1.Network.DeviceType;
 
@@ -40,6 +44,14 @@ public class SearchFragment extends Fragment {
         activity = (MainActivity) getActivity();
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        ProgressBar mprogressBar = (ProgressBar) rootView.findViewById(R.id.circular_progress_bar);
+        mprogressBar.setIndeterminate(true);
+        /*ObjectAnimator anim = ObjectAnimator.ofInt(mprogressBar, "progress", 0, 100);
+        anim.setDuration(15000);
+        anim.setInterpolator(new DecelerateInterpolator());
+        anim.start();*/
+
 
         return rootView;
     }

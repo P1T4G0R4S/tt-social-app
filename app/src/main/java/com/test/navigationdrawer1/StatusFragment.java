@@ -114,7 +114,7 @@ public class StatusFragment extends Fragment {
     IHttpResponseMethods createHistorialEstadoUsuario = new IHttpResponseMethods() {
         @Override
         public void response(String jsonResponse) {
-            Toast.makeText(activity.getApplicationContext(), jsonResponse,
+            Toast.makeText(activity.getApplicationContext(), "Hecho",
                     Toast.LENGTH_LONG).show();
         }
 
